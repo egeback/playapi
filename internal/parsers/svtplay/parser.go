@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"../../models"
-	"../../parsers"
-	"../../utils"
+	"github.com/egeback/play_media_api/internal/models"
+	"github.com/egeback/play_media_api/internal/parsers"
+	"github.com/egeback/play_media_api/internal/utils"
 )
 
 // Parser ...

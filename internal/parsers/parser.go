@@ -10,7 +10,7 @@ type ParserInterface interface {
 	GetShows() []models.Show
 	GetShowsWithSeasons() []models.Show
 	//getURL(operation string, hashValue string, variables map[string]interface{}) string
-	//GetSeasonsConcurent(shows []playmediaapi.Show) []playmediaapi.Show
+	//GetSeasonsConcurent(shows []models.Show) []models.Show
 }
 
 //GetSeasonsConcurent ...

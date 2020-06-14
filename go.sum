@@ -5,6 +5,13 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/egeback/play_media_api v0.1.0 h1:e++O36z3HzUCfKGOIg07LRGKAseSHe/V4Hp8FsxrHUc=
+github.com/egeback/play_media_api/internal v0.0.0-20200614204253-273f4144d69d h1:POrdrDr1i3V4mOQSxqYEVeAjeMq9+XbELLtB+2hA6/c=
+github.com/egeback/play_media_api/internal v0.0.0-20200614204253-273f4144d69d/go.mod h1:eILet61iQ1svlfMJFi9MY0gTP0fxUHkWXXzuVvyeFUA=
+github.com/egeback/play_media_api/internal v0.0.0-20200614212648-6ab21cee49be h1:kfoBD6bHW1uhJFvSmM68UoGn81s3zuFUpRgfh5/Ootw=
+github.com/egeback/play_media_api/internal/parsers v0.0.0-20200614212648-6ab21cee49be h1:qUcxuMrf8pDSvyDtwNXJUlmaeGGaE0m24RBiB/p15cY=
+github.com/egeback/play_media_api/internal/parsers v0.0.0-20200614212648-6ab21cee49be/go.mod h1:yKUVKPgc/3Tk4esxsyBGGGWBjpOWJtpV4VN8dzsJQSo=
+github.com/egeback/play_media_api/internal/parsers/svtplay v0.0.0-20200614212648-6ab21cee49be h1:tyAjlabU76pgMNGVqMbqnOOz+mgRqvnudxurjvW9HJ8=
+github.com/egeback/play_media_api/internal/parsers/svtplay v0.0.0-20200614212648-6ab21cee49be/go.mod h1:4qgcEWppIZKJZ3xZxVgqSmfRn2tGpQHdFO2SWILHPiA=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=

@@ -3,6 +3,8 @@ module github.com/egeback/play_media_api
 go 1.14
 
 require (
+	github.com/egeback/play_media_api/internal/parsers v0.0.0-20200614212648-6ab21cee49be // indirect
+	github.com/egeback/play_media_api/internal/parsers/svtplay v0.0.0-20200614212648-6ab21cee49be // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
