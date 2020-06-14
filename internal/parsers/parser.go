@@ -1,24 +1,24 @@
-package parsers
+package playmediaapi
 
 import (
-	"github.com/egeback/play_media_api/internal/models"
+	playmediaapi "github.com/egeback/play_media_api"
 )
 
 const nrWorkers = 100
 
 //ParserInterface ...
 type ParserInterface interface {
-	GetSeasons(show models.Show) []models.Season
-	GetShows() []models.Show
-	GetShowsWithSeasons() []models.Show
+	GetSeasons(show playmediaapi.Show) []playmediaapi.Season
+	GetShows() []playmediaapi.Show
+	GetShowsWithSeasons() []playmediaapi.Show
 	//getURL(operation string, hashValue string, variables map[string]interface{}) string
-	//GetSeasonsConcurent(shows []models.Show) []models.Show
+	//GetSeasonsConcurent(shows []playmediaapi.Show) []playmediaapi.Show
 }
 
 //GetSeasonsConcurent ...
-func GetSeasonsConcurent(p ParserInterface, shows []models.Show) []models.Show {
-	jobs := make(chan models.Show, len(shows))
-	results := make(chan models.Show, len(shows))
+func GetSeasonsConcurent(p ParserInterface, shows []playmediaapi.Show) []playmediaapi.Show {
+	jobs := make(chan playmediaapi.Show, len(shows))
+	results := make(chan playmediaapi.Show, len(shows))
 
 	for w := 0; w < nrWorkers; w++ {
 		go worker(p, jobs, results)
@@ -29,7 +29,7 @@ func GetSeasonsConcurent(p ParserInterface, shows []models.Show) []models.Show {
 	}
 
 	close(jobs)
-	newShows := make([]models.Show, 0, len(shows))
+	newShows := make([]playmediaapi.Show, 0, len(shows))
 	for i := 0; i < len(shows); i++ {
 		newShows = append(newShows, <-results)
 	}
@@ -37,7 +37,7 @@ func GetSeasonsConcurent(p ParserInterface, shows []models.Show) []models.Show {
 }
 
 //Worker ...
-func worker(p ParserInterface, jobs <-chan models.Show, results chan<- models.Show) {
+func worker(p ParserInterface, jobs <-chan playmediaapi.Show, results chan<- playmediaapi.Show) {
 	for j := range jobs {
 		j.Seasons = p.GetSeasons(j)
 		results <- j

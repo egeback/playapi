@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 
-	"./api"
-	"./parsers"
-	parser "github.com/egeback/play_media_api/internal/parsers/svtplay"
+	"github.com/egeback/play_media_api/internal/api"
 )
 
 var (
@@ -17,7 +15,7 @@ var (
 
 func main() {
 	fmt.Println("Running Play Media API version: %s (%s)", BuildVersion, BuildTime)
-	parsers := []parsers.ParserInterface{new(parser.SvtPlayParser), new(parser.SvtPlayParser)}
+	parsers := []playmediaapi.ParserInterface{new(playmediaapi.SvtPlayParser), new(playmediaapi.SvtPlayParser)}
 	//parsers := []parsers.ParserInterface{new(tv4play.Parser)}
 
 	api := api.Init(parsers)

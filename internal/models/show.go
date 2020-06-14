@@ -1,4 +1,4 @@
-package models
+package playmediaapi
 
 // Show handles show information
 type Show struct {

@@ -1,4 +1,4 @@
-package utils
+package playmediaapi
 
 import (
 	"encoding/json"
