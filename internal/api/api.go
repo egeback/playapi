@@ -27,7 +27,7 @@ type RestAPI struct {
 }
 
 // Init ...
-func Init(parsers []playmediaapi.ParserInterface) *RestAPI {
+func Init(parsers []parsers.ParserInterface) *RestAPI {
 	api := new(RestAPI)
 	api.parsers = parsers
 	api.router = gin.Default()
