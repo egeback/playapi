@@ -1,16 +1,16 @@
-package tv4play
+package parser
 
 import (
 	"fmt"
 
-	"github.com/egeback/stream_media_api/src/models"
-	"github.com/egeback/stream_media_api/src/parsers"
-	"github.com/egeback/stream_media_api/src/utils"
+	"../../models"
+	"../../parsers"
+	"../../utils"
 	"github.com/gosimple/slug"
 )
 
-// Parser ...
-type Parser struct {
+// Tv4PlayParser ...
+type Tv4PlayParser struct {
 	parsers.ParserInterface
 }
 
@@ -57,7 +57,7 @@ func extractShow(data map[string]interface{}) models.Show {
 }
 
 //GetSeasons ...
-func (p Parser) GetSeasons(show models.Show) []models.Season {
+func (p Tv4PlayParser) GetSeasons(show models.Show) []models.Season {
 	data := utils.GetJSON(show.URL)
 	seasons := make(map[string]models.Season)
 
@@ -117,7 +117,7 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 }
 
 //GetShows ...
-func (p Parser) GetShows() []models.Show {
+func (p Tv4PlayParser) GetShows() []models.Show {
 	data := utils.GetJSON("https://api.tv4play.se/play/programs?is_active=true&platform=tablet&per_page=1000&fl=nid,name,program_image,is_premium,updated_at,channel,description,category_nid&start=0")
 	//var data = j.(map[string]interface{})
 	totalHits := int(data["total_hits"].(float64))
@@ -135,7 +135,7 @@ func (p Parser) GetShows() []models.Show {
 }
 
 // GetShowsWithSeasons ...
-func (p Parser) GetShowsWithSeasons() []models.Show {
+func (p Tv4PlayParser) GetShowsWithSeasons() []models.Show {
 	shows := p.GetShows()
 	return parsers.GetSeasonsConcurent(p, shows)
 }

@@ -1,16 +1,16 @@
-package svtplay
+package parser
 
 import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/egeback/stream_media_api/src/models"
-	"github.com/egeback/stream_media_api/src/parsers"
-	"github.com/egeback/stream_media_api/src/utils"
+	"../../models"
+	"../../parsers"
+	"../../utils"
 )
 
-// Parser ...
-type Parser struct {
+// SvtPlayParser ...
+type SvtPlayParser struct {
 	parsers.ParserInterface
 }
 

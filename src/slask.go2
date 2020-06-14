@@ -1,0 +1,31 @@
+// func getValue(m map[string]interface{}, key string, defaultValue ...interface{}) interface{} {
+// 	value, ok := m[key]
+// 	if !ok {
+// 		if len(defaultValue) > 0 {
+// 			return defaultValue[0]
+// 		} else {
+// 			return nil
+// 		}
+// 	}
+// 	return value
+// }
+
+// //func listToArray(list *list.List, array ...Mapable) Mapable {
+// func listToArray(list *list.List, array ...interface{}) interface{} {
+// 	i := 0
+// 	for item := list.Front(); item != nil; item = item.Next() {
+// 		switch item.Value.(type) {
+// 		case models.Season:
+// 			array = append(array, item.Value.(models.Season))
+// 		case models.Episode:
+// 			array = append(array, item.Value.(models.Episode))
+// 		case models.Show:
+// 			array = append(array, item.Value.(models.Show))
+// 		case models.Variant:
+// 			array = append(array, item.Value.(models.Variant))
+// 		default:
+// 		}
+// 		i++
+// 	}
+// 	return array
+// }

@@ -1,7 +1,7 @@
 package parsers
 
 import (
-	"github.com/egeback/stream_media_api/src/models"
+	"../models"
 )
 
 const nrWorkers = 100

@@ -9,13 +9,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jasonlvhit/gocron"
-
-	"github.com/egeback/media_downloader/media_api/src/models"
-	"github.com/egeback/media_downloader/media_api/src/parsers"
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/go-version"
+	"github.com/jasonlvhit/gocron"
 	"github.com/liip/sheriff"
+
+	"github.com/egeback/stream_media_api/src/models"
+	"github.com/egeback/stream_media_api/src/parsers"
 )
 
 // RestAPI ...
