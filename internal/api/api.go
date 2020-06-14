@@ -14,8 +14,8 @@ import (
 	"github.com/jasonlvhit/gocron"
 	"github.com/liip/sheriff"
 
-	"github.com/egeback/stream_media_api/src/models"
-	"github.com/egeback/stream_media_api/src/parsers"
+	"github.com/egeback/play_media_api/src/models"
+	"github.com/egeback/play_media_api/src/parsers"
 )
 
 // RestAPI ...
