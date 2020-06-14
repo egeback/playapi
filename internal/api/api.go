@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	playmediaapi "github.com/egeback/play_media_api"
+	playmediaapi "github.com/egeback/play_media_api/internal"
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/go-version"
 	"github.com/jasonlvhit/gocron"
