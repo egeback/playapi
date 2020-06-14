@@ -1,4 +1,4 @@
-package playmediaapi
+package tv4play
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 	"github.com/gosimple/slug"
 )
 
-// Tv4PlayParser ...
-type Tv4PlayParser struct {
+// Parser ...
+type Parser struct {
 	parsers.ParserInterface
 }
 

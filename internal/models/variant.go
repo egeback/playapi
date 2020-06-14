@@ -1,4 +1,4 @@
-package playmediaapi
+package models
 
 //Variant is
 type Variant struct {

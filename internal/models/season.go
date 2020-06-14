@@ -1,4 +1,4 @@
-package playmediaapi
+package models
 
 // Season handles season info
 type Season struct {

@@ -1,4 +1,4 @@
-package playmediaapi
+package svtplay
 
 import (
 	"encoding/json"
@@ -9,8 +9,8 @@ import (
 	"../../utils"
 )
 
-// SvtPlayParser ...
-type SvtPlayParser struct {
+// Parser ...
+type Parser struct {
 	parsers.ParserInterface
 }
 

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	playmediaapi "github.com/egeback/play_media_api/internal"
+	playmediaapi "github.com/egeback/play_media_api"
 )
 
 var (

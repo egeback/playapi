@@ -1,4 +1,4 @@
-package playmediaapi
+package models
 
 // Episode is
 type Episode struct {
