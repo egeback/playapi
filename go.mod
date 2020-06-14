@@ -1,4 +1,4 @@
-module github.com/egeback/media_downloader/media_api
+module github.com/egeback/play_media_api
 
 go 1.14
 
