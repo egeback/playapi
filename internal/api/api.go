@@ -1,4 +1,4 @@
-package playmediaapi
+package api
 
 import (
 	"encoding/json"
@@ -9,6 +9,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/egeback/play_media_api/internal/models"
+	"github.com/egeback/play_media_api/internal/parsers"
+
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/go-version"
 	"github.com/jasonlvhit/gocron"
@@ -18,8 +21,8 @@ import (
 // RestAPI ...
 type RestAPI struct {
 	router  *gin.Engine
-	parsers []playmediaapi.ParserInterface
-	Shows   []playmediaapi.Show
+	parsers []parsers.ParserInterface
+	Shows   []models.Show
 	v1      *gin.RouterGroup
 }
 
@@ -41,7 +44,7 @@ func Init(parsers []playmediaapi.ParserInterface) *RestAPI {
 }
 
 func (api *RestAPI) updateShows() {
-	shows := make([]playmediaapi.Show, 0)
+	shows := make([]models.Show, 0)
 	for _, parser := range api.parsers {
 		shows = append(shows, parser.GetShowsWithSeasons()...)
 	}
@@ -143,7 +146,7 @@ func (api RestAPI) shows(c *gin.Context) {
 func (api RestAPI) show(c *gin.Context) {
 	slug := c.Param("slug")
 	prettyPrint := c.DefaultQuery("prettyPrint", "false")
-	var show *playmediaapi.Show
+	var show *models.Show
 
 	for _, s := range api.Shows {
 		if s.Slug == slug {
