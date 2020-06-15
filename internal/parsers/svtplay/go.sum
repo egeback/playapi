@@ -1,0 +1,8 @@
+github.com/egeback/play_media_api v0.1.1 h1:F3Gv940dTuOUnMnqzDKr7dLso/iC6rzFw5hJBTl3ZMg=
+github.com/egeback/play_media_api/internal v0.0.0-20200615044914-645054921c99 h1:tc8tR7FmgqfNTToiR/avK8jHL2B91dgNMtLuPstqGgA=
+github.com/egeback/play_media_api/internal/models v0.0.0-20200615044914-645054921c99 h1:TkysPFCBOX7+oz3ZKSs5KzJsS2FeGVHObEuhnrrARc0=
+github.com/egeback/play_media_api/internal/models v0.0.0-20200615044914-645054921c99/go.mod h1:aYCR3L4i/MQd37G4oIZkRm4Aglb4LCG1muVSQcP7r6Y=
+github.com/egeback/play_media_api/internal/parsers v0.0.0-20200615044914-645054921c99 h1:bTn6uKxLnYybgqMindPwMBuQF5iY15xmTeQRiQq8t7o=
+github.com/egeback/play_media_api/internal/parsers v0.0.0-20200615044914-645054921c99/go.mod h1:+pCivh1CZinJ4LE63/NuDzYGW3lFuHltNxeUEdnryAg=
+github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99 h1:Hn8TRE0gPUBtU0nfNzjCV7Hip/gESvpYz8IrQLUGZd8=
+github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99/go.mod h1:1klMJZdDxJoRnZHciO0dB9RBSTln2mXkdlO2dG8x+NE=

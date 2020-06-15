@@ -3,6 +3,7 @@ package svtplay
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/egeback/play_media_api/internal/models"
 	"github.com/egeback/play_media_api/internal/parsers"
@@ -55,8 +56,19 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 
 	//seasons := list.New()
 	seasons := make([]models.Season, 0, 10)
-	var data = result["data"].(map[string]interface{})
-	var listablesBySlugContainer = data["listablesBySlug"].([]interface{})
+	var data, ok = result["data"].(map[string]interface{})
+	if !ok {
+		log.Panic("Could not convert result[\"data\"]")
+		return seasons
+	}
+	fmt.Println("Test")
+	var listablesBySlugContainer, ok2 = data["listablesBySlug"].([]interface{})
+	if !ok2 {
+		log.Panic("Could not convert result[\"data\"]")
+		return seasons
+	}
+	//var data = utils.GetInterfaceMap(result["data"])
+	//var listablesBySlugContainer = utils.GetInterfaceArray(data["listablesBySlug"])
 
 	for _, l := range listablesBySlugContainer {
 		listablesBySlugContainer := l.(map[string]interface{})

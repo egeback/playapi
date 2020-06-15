@@ -7,17 +7,11 @@ import (
 	"github.com/egeback/play_media_api/internal/parsers"
 	"github.com/egeback/play_media_api/internal/parsers/svtplay"
 	"github.com/egeback/play_media_api/internal/parsers/tv4play"
-)
-
-var (
-	// BuildVersion updated when running build script
-	BuildVersion string = ""
-	// BuildTime updated when running build script
-	BuildTime string = ""
+	"github.com/egeback/play_media_api/internal/version"
 )
 
 func main() {
-	fmt.Println("Running Play Media API version: %s (%s)", BuildVersion, BuildTime)
+	fmt.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
 	parsers := []parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)}
 	//parsers := []parsers.ParserInterface{new(tv4play.Parser)}
 
