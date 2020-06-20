@@ -18,6 +18,6 @@ import (
 // @Failure 500 {string} string "ok"
 // @Router /ping [get]
 func (c *Controller) Ping(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, Response{Data: "pong"})
+	ctx.JSON(http.StatusOK, "pong")
 	return
 }

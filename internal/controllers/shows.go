@@ -15,9 +15,9 @@ import (
 // @Tags shows
 // @Accept  json
 // @Produce  json
+// @Param prettyPrint string false "pretty print show" Format(bool)
 // @Success 200 {array} models.Show
 // @Failure 400 {object} ErrorResponse
-// @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /shows [get]
 func (c *Controller) ListShows(ctx *gin.Context) {
@@ -65,8 +65,10 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param slug path string true "Show ID"
+// @Param prettyPrint string false "pretty print show" Format(bool)
 // @Success 200 {object} models.Show
 // @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /show/{slug} [get]
 func (c *Controller) ShowShow(ctx *gin.Context) {

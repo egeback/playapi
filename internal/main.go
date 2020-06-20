@@ -35,7 +35,9 @@ func main() {
 	fmt.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
 	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
 
-	r := gin.Default()
+	//r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
 	r.Use(jsonp.JsonP())
 	c := controllers.NewController()
 	v1 := r.Group("/api/v1")
