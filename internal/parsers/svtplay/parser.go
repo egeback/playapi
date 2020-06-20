@@ -19,6 +19,11 @@ type Parser struct {
 type Mapable interface {
 }
 
+// Name return name of parser
+func (p Parser) Name() string {
+	return "svtPlay"
+}
+
 //GetShowsWithSeasons ...
 func (p Parser) GetShowsWithSeasons() []models.Show {
 	shows := p.GetShows()
@@ -61,7 +66,6 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 		log.Panic("Could not convert result[\"data\"]")
 		return seasons
 	}
-	fmt.Println("Test")
 	var listablesBySlugContainer, ok2 = data["listablesBySlug"].([]interface{})
 	if !ok2 {
 		log.Panic("Could not convert result[\"data\"]")

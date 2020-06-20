@@ -9,6 +9,7 @@ type ParserInterface interface {
 	GetSeasons(show models.Show) []models.Season
 	GetShows() []models.Show
 	GetShowsWithSeasons() []models.Show
+	Name() string
 	//getURL(operation string, hashValue string, variables map[string]interface{}) string
 	//GetSeasonsConcurent(shows []models.Show) []models.Show
 }
@@ -40,4 +41,25 @@ func worker(p ParserInterface, jobs <-chan models.Show, results chan<- models.Sh
 		j.Seasons = p.GetSeasons(j)
 		results <- j
 	}
+}
+
+var parsers []ParserInterface
+
+//All return all parsers defined
+func All(q string) []ParserInterface {
+	if q == "" {
+		return parsers
+	}
+	as := []ParserInterface{}
+	for k, p := range parsers {
+		if q == p.Name() {
+			as = append(as, parsers[k])
+		}
+	}
+	return as
+}
+
+//Set set allication parsers
+func Set(p []ParserInterface) {
+	parsers = p
 }

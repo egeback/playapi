@@ -14,6 +14,11 @@ type Parser struct {
 	parsers.ParserInterface
 }
 
+// Name return name of parser
+func (p Parser) Name() string {
+	return "tv4Play"
+}
+
 func updateGenre(genre string) string {
 	updatedGenre := map[string]string{
 		"dokumentärer":   "Dokumentär",
