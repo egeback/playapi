@@ -7,4 +7,4 @@ services:
     environment:
      - GIN_MODE=release
     ports:
-     - "2000:2000"
+     - "8080:8080"

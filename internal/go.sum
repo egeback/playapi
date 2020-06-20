@@ -19,6 +19,7 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dchest/safefile v0.0.0-20151022103144-855e8d98f185/go.mod h1:cFRxtTwTOJkz2x3rQUNCYKWC93yP1VKjR8NUhqFxZNU=
 github.com/egeback/play_media_api/internal v0.0.0-20200615181031-ff340633ceaf/go.mod h1:2eaJJPBk11juLXgCIrK4ITFO4HI+aYf/VH6PSfE7oY0=
+github.com/egeback/play_media_api/internal/api v0.0.0-20200615044914-645054921c99/go.mod h1:Ni2N5CLSTnWupNCWQ6BD2m3vSOa2klNDcLlnzQ3GiVc=
 github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99 h1:Hn8TRE0gPUBtU0nfNzjCV7Hip/gESvpYz8IrQLUGZd8=
 github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99/go.mod h1:1klMJZdDxJoRnZHciO0dB9RBSTln2mXkdlO2dG8x+NE=
 github.com/egeback/play_media_api/internal/version v0.0.0-20200615181031-ff340633ceaf h1:QPBdcfjbsqfYbiQA98a8f/dZBHEH0ynzJvtWVVMpciA=
@@ -196,6 +197,7 @@ golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190610200419-93c9922d18ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190616124812-15dcb6c0061f/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200116001909-b77594299b42/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd h1:xhmwyvizuTgC2qz7ZlMluP20uW+C3Rm0FD/WLDX8884=
 golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200620081246-981b61492c35 h1:wb/9mP8eUAmHfkM8RmpeLq6nUA7c2i5+bQOtcDftjaE=
 golang.org/x/sys v0.0.0-20200620081246-981b61492c35/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
