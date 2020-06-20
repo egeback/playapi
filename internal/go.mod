@@ -3,7 +3,6 @@ module github.com/egeback/play_media_api/internal
 go 1.14
 
 replace (
-	github.com/egeback/play_media_api/internal/api => ./api
 	github.com/egeback/play_media_api/internal/controllers => ./controllers
 	github.com/egeback/play_media_api/internal/docs => ./docs
 	github.com/egeback/play_media_api/internal/models => ./models
@@ -14,7 +13,6 @@ replace (
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/egeback/play_media_api/internal/api v0.0.0-20200615044914-645054921c99
 	github.com/egeback/play_media_api/internal/controllers v0.0.0-00010101000000-000000000000
 	github.com/egeback/play_media_api/internal/docs v0.0.0-00010101000000-000000000000
 	github.com/egeback/play_media_api/internal/models v0.0.0-20200615181031-ff340633ceaf
