@@ -36,25 +36,25 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 			"data_type":  "String",
 		})
 	}
+
+	shows, err := models.ShowsAll("")
+	if err != nil {
+		log.Panic(err)
+		c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
+	}
+
 	if !displaySeasons {
-		if err != nil {
-			log.Panic(err)
-		}
-		shows, err := models.ShowsAll("")
-		if err != nil {
-			c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
-		}
 		if prettyPrint {
 			c.createJSONResponsePretty(ctx, shows)
 		} else {
 			c.createJSONResponse(ctx, shows)
 		}
 	} else {
-		shows, err := models.ShowsAll("")
-		if err != nil {
-			c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
+		if prettyPrint {
+			c.createJSONResponsePretty(ctx, shows, "seasons")
+		} else {
+			c.createJSONResponse(ctx, shows, "seasons")
 		}
-		c.createJSONResponse(ctx, shows, "seasons")
 	}
 }
 
