@@ -12,11 +12,10 @@ require (
 )
 
 replace (
-	github.com/egeback/play_media_api/internal/api => internal/api
-	github.com/egeback/play_media_api/internal/controllers => internal/controllers
-	github.com/egeback/play_media_api/internal/docs => internal/docs
-	github.com/egeback/play_media_api/internal/models => internal/models
-	github.com/egeback/play_media_api/internal/parsers => internal/parsers
-	github.com/egeback/play_media_api/internal/parsers/svtplay => internal/parsers/svtplay
-	github.com/egeback/play_media_api/internal/parsers/tv4play => internal/parsers/tv4play
+	github.com/egeback/play_media_api/internal/controllers => ./internal/controllers
+	github.com/egeback/play_media_api/internal/docs => ./internal/docs
+	github.com/egeback/play_media_api/internal/models => ./internal/models
+	github.com/egeback/play_media_api/internal/parsers => ./internal/parsers
+	github.com/egeback/play_media_api/internal/parsers/svtplay => ./internal/parsers/svtplay
+	github.com/egeback/play_media_api/internal/parsers/tv4play => ./internal/parsers/tv4play
 )
