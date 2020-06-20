@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  play_media_api:
+    build: .
+    container_name: play_media_api
+    environment:
+     - GIN_MODE=release
+    ports:
+     - "2000:2000"
