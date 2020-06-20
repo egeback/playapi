@@ -2,7 +2,7 @@ package models
 
 // Episode is
 type Episode struct {
-	ID              string    `json:"-" groups:"api"`
+	ID              string    `json:"id" groups:"api"`
 	Name            string    `json:"name" groups:"api"`
 	SvtID           string    `json:"svtId" groups:"api"`
 	VideoSvtID      string    `json:"videoSvtId" groups:"api"`

@@ -204,11 +204,15 @@ func (p Parser) GetShows() []models.Show {
 					//fmt.Println(item["slug"].(string), url)
 				}
 
+				variables := map[string]interface{}{"titleSlugs": []string{item["slug"].(string)}}
+				downloadURL := p.getURL("TitlePage", "4122efcb63970216e0cfb8abb25b74d1ba2bb7e780f438bbee19d92230d491c5", variables)
+
 				show := models.Show{
 					ID:          item["id"].(string),
 					Name:        item["name"].(string),
 					Slug:        item["slug"].(string),
-					URL:         url,
+					APIURL:      downloadURL,
+					PageURL:     url,
 					ImageURL:    image,
 					Description: item["longDescription"].(string),
 					UpdatedAt:   "",

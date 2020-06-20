@@ -5,7 +5,8 @@ type Show struct {
 	ID          string   `json:"-" groups:"api" example:"1"`
 	Name        string   `json:"name" groups:"api" example:"Show Name"`
 	Slug        string   `json:"slug" groups:"api" example:"show_name"`
-	URL         string   `json:"url" groups:"api" example:"http://adad.ad/se"`
+	APIURL      string   `json:"api_url" groups:"api" example:"http://adad.ad/se"`
+	PageURL     string   `json:"page_url" groups:"api" example:"http://adad.ad/se"`
 	Seasons     []Season `json:"seasons" groups:"seasons"`
 	ImageURL    string   `json:"imageUrl" groups:"api" example:"http://adad.ad/se"`
 	Description string   `json:"decription" groups:"api" example:"Show about x"`

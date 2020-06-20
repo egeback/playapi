@@ -48,12 +48,14 @@ func extractShow(data map[string]interface{}) models.Show {
 	//videoAssetId := GetStringValue(data, "video_asset_id", "")
 
 	url := fmt.Sprintf("https://api.tv4play.se/play/video_assets?platform=tablet&per_page=1000&is_live=false&type=episode&page=1&node_nids=%s&start=0", utils.Quote(slug))
+	pageURL := fmt.Sprintf("https://www.tv4play.se/program/%s", utils.Quote(slug))
 
 	return models.Show{
 		ID:          id,
 		Name:        name,
 		Slug:        slug,
-		URL:         url,
+		APIURL:      url,
+		PageURL:     pageURL,
 		ImageURL:    programImage,
 		Description: description,
 		UpdatedAt:   updatedAt,
@@ -63,7 +65,7 @@ func extractShow(data map[string]interface{}) models.Show {
 
 //GetSeasons ...
 func (p Parser) GetSeasons(show models.Show) []models.Season {
-	data := utils.GetJSON(show.URL)
+	data := utils.GetJSON(show.APIURL)
 	seasons := make(map[string]models.Season)
 
 	var results = data["results"].([]interface{})
@@ -102,6 +104,7 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 			ValidFrom:       publishedDateTime,
 			ValidTo:         expireDateTime,
 			Number:          episodeNr,
+			URL:             fmt.Sprintf("https://www.tv4play.se/program/%s/%s", utils.Quote(slug), id),
 		}
 		s := seasons[season]
 		s.Episodes = append(s.Episodes, episode)
