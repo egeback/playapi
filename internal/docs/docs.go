@@ -73,7 +73,54 @@ var doc = `{
                 }
             }
         },
-        "/show/{slug}": {
+        "/shows": {
+            "get": {
+                "description": "get shows",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shows"
+                ],
+                "summary": "List shows",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "bool",
+                        "description": "pretty print show",
+                        "name": "prettyPrint",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Show"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/shows/{slug}": {
             "get": {
                 "description": "get show by slug",
                 "consumes": [
@@ -93,6 +140,13 @@ var doc = `{
                         "name": "slug",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "bool",
+                        "description": "pretty print show",
+                        "name": "prettyPrint",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -100,50 +154,6 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Show"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/shows": {
-            "get": {
-                "description": "get shows",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "shows"
-                ],
-                "summary": "List shows",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Show"
-                            }
                         }
                     },
                     "400": {
@@ -233,16 +243,16 @@ var doc = `{
         "models.Season": {
             "type": "object",
             "properties": {
-                "episodes groups:": {
+                "episodes": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Episode"
                     }
                 },
-                "id groups:": {
+                "id": {
                     "type": "string"
                 },
-                "name groups:": {
+                "name": {
                     "type": "string"
                 }
             }

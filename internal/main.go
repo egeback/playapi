@@ -34,6 +34,7 @@ import (
 func main() {
 	fmt.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
 	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
+	//parsers.Set([]parsers.ParserInterface{new(tv4play.Parser)})
 
 	//r := gin.Default()
 	r := gin.New()
@@ -67,7 +68,8 @@ func main() {
 func updateShows() {
 	shows := make([]models.Show, 0)
 	for _, parser := range parsers.All("") {
-		shows = append(shows, parser.GetShowsWithSeasons()...)
+		s := parser.GetShowsWithSeasons()
+		shows = append(shows, parser.PostCheckShows(s)...)
 	}
 
 	showsWithSeasons := 0

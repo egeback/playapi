@@ -54,9 +54,6 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 	variables := map[string]interface{}{"titleSlugs": []string{slug}}
 
 	downloadURL := p.getURL("TitlePage", "4122efcb63970216e0cfb8abb25b74d1ba2bb7e780f438bbee19d92230d491c5", variables)
-	if slug == "1-000-doda-pa-ett-dygn-i-brasilien" {
-		//fmt.Println(slug, downloadURL)
-	}
 	result := utils.GetJSON(downloadURL)
 
 	//seasons := list.New()
@@ -207,7 +204,17 @@ func (p Parser) GetShows() []models.Show {
 					//fmt.Println(item["slug"].(string), url)
 				}
 
-				show := models.Show{item["id"].(string), item["name"].(string), item["slug"].(string), url, nil, image, item["longDescription"].(string), "", genre["name"].(string)}
+				show := models.Show{
+					ID:          item["id"].(string),
+					Name:        item["name"].(string),
+					Slug:        item["slug"].(string),
+					URL:         url,
+					ImageURL:    image,
+					Description: item["longDescription"].(string),
+					UpdatedAt:   "",
+					Genre:       genre["name"].(string),
+					Prossesed:   false,
+				}
 				//shows.PushBack(show)
 				counter++
 				shows = append(shows, show)
@@ -217,5 +224,10 @@ func (p Parser) GetShows() []models.Show {
 			}
 		}
 	}
+	return shows
+}
+
+// PostCheckShows to remove the ones that should not be visible
+func (p Parser) PostCheckShows(shows []models.Show) []models.Show {
 	return shows
 }

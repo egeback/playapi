@@ -9,17 +9,17 @@ replace (
 	github.com/egeback/play_media_api/internal/parsers => ./parsers
 	github.com/egeback/play_media_api/internal/parsers/svtplay => ./parsers/svtplay
 	github.com/egeback/play_media_api/internal/parsers/tv4play => ./parsers/tv4play
+	github.com/egeback/play_media_api/internal/utils => ./utils
 )
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/egeback/play_media_api/internal/controllers v0.0.0-00010101000000-000000000000
 	github.com/egeback/play_media_api/internal/docs v0.0.0-00010101000000-000000000000
-	github.com/egeback/play_media_api/internal/models v0.0.0-20200615181031-ff340633ceaf
-	github.com/egeback/play_media_api/internal/parsers v0.0.0-20200615181031-ff340633ceaf
+	github.com/egeback/play_media_api/internal/models v0.0.0-20200620141031-e00657304b36
+	github.com/egeback/play_media_api/internal/parsers v0.0.0-20200620141031-e00657304b36
 	github.com/egeback/play_media_api/internal/parsers/svtplay v0.0.0-20200615044914-645054921c99
 	github.com/egeback/play_media_api/internal/parsers/tv4play v0.0.0-20200615044914-645054921c99
-	github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99 // indirect
 	github.com/egeback/play_media_api/internal/version v0.0.0-20200615181031-ff340633ceaf
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-openapi/spec v0.19.8 // indirect

@@ -6,7 +6,7 @@ import (
 	"github.com/egeback/play_media_api/internal/models"
 	"github.com/egeback/play_media_api/internal/parsers"
 	"github.com/egeback/play_media_api/internal/utils"
-	"github.com/gosimple/slug"
+	slugger "github.com/gosimple/slug"
 )
 
 // Parser ...
@@ -75,7 +75,7 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 	for _, r := range results {
 		result := r.(map[string]interface{})
 		title := utils.GetStringValue(result, "title", "")
-		slug := slug.Make(title)
+		slug := slugger.MakeLang(title, "sv")
 		id := utils.GetStringValue(result, "id", "0")
 		description := utils.GetStringValue(result, "description", "")
 		//tags := GetStringValue(result, "tags", "")
@@ -104,17 +104,13 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 			Number:          episodeNr,
 		}
 		s := seasons[season]
-		//episodes := s.Episodes
-		// fmt.Println("Show", show.Name, "Name:", s.Name, "Len:", len(seasons[season].Episodes))
 		s.Episodes = append(s.Episodes, episode)
 		seasons[season] = s
-		// fmt.Println("Show", show.Name, "Name:", seasons[season].Name, "Len:", len(seasons[season].Episodes))
-		// fmt.Println("------")
 	}
 
-	values := make([]models.Season, len(seasons), len(seasons))
+	values := make([]models.Season, 0, len(seasons))
 
-	for _, value := range values {
+	for _, value := range seasons {
 		values = append(values, value)
 	}
 
@@ -124,7 +120,6 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 //GetShows ...
 func (p Parser) GetShows() []models.Show {
 	data := utils.GetJSON("https://api.tv4play.se/play/programs?is_active=true&platform=tablet&per_page=1000&fl=nid,name,program_image,is_premium,updated_at,channel,description,category_nid&start=0")
-	//var data = j.(map[string]interface{})
 	totalHits := int(data["total_hits"].(float64))
 	var results = data["results"].([]interface{})
 
@@ -143,4 +138,15 @@ func (p Parser) GetShows() []models.Show {
 func (p Parser) GetShowsWithSeasons() []models.Show {
 	shows := p.GetShows()
 	return parsers.GetSeasonsConcurent(p, shows)
+}
+
+// PostCheckShows to remove the ones that should not be visible
+func (p Parser) PostCheckShows(shows []models.Show) []models.Show {
+	newShows := make([]models.Show, 0, len(shows))
+	for _, show := range shows {
+		if len(show.Seasons) > 0 {
+			newShows = append(newShows, show)
+		}
+	}
+	return newShows
 }

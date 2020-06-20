@@ -11,6 +11,7 @@ type Show struct {
 	Description string   `json:"decription" groups:"api" example:"Show about x"`
 	UpdatedAt   string   `json:"updatedAt" groups:"api" example:"2019-12-22"`
 	Genre       string   `json:"genre" groups:"api" example:"2019-12-22"`
+	Prossesed   bool     `json:"-"`
 	//Data interface
 }
 

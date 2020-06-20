@@ -15,12 +15,17 @@ import (
 
 // GetJSON ...
 func GetJSON(url string) map[string]interface{} {
-	resp, _ := http.Get(url)
+	resp, err := http.Get(url)
+
+	if err != nil {
+		log.Panic(err)
+		return make(map[string]interface{})
+	}
 
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Panic(err)
-		panic(err)
+		return make(map[string]interface{})
 	}
 
 	var result map[string]interface{}

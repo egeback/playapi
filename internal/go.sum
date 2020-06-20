@@ -22,6 +22,8 @@ github.com/egeback/play_media_api/internal v0.0.0-20200615181031-ff340633ceaf/go
 github.com/egeback/play_media_api/internal/api v0.0.0-20200615044914-645054921c99/go.mod h1:Ni2N5CLSTnWupNCWQ6BD2m3vSOa2klNDcLlnzQ3GiVc=
 github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99 h1:Hn8TRE0gPUBtU0nfNzjCV7Hip/gESvpYz8IrQLUGZd8=
 github.com/egeback/play_media_api/internal/utils v0.0.0-20200615044914-645054921c99/go.mod h1:1klMJZdDxJoRnZHciO0dB9RBSTln2mXkdlO2dG8x+NE=
+github.com/egeback/play_media_api/internal/utils v0.0.0-20200620132806-3ca191c7514b h1:o7TOVmVUfOjvFMMMnvnDO+zBKxKKMFS4K4SSepuyfDk=
+github.com/egeback/play_media_api/internal/utils v0.0.0-20200620132806-3ca191c7514b/go.mod h1:1klMJZdDxJoRnZHciO0dB9RBSTln2mXkdlO2dG8x+NE=
 github.com/egeback/play_media_api/internal/version v0.0.0-20200615181031-ff340633ceaf h1:QPBdcfjbsqfYbiQA98a8f/dZBHEH0ynzJvtWVVMpciA=
 github.com/egeback/play_media_api/internal/version v0.0.0-20200615181031-ff340633ceaf/go.mod h1:uK9jMMec2lLJ8rTlxMzk+ZHiw6ua2Ew9ekKgwvUG/uY=
 github.com/egeback/stream_media_api v0.1.1 h1:LZtXeA2l4OvXQI19s2gG3SlFLpyrRiH4gLz5XEcGxyg=
