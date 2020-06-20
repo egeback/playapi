@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"time"
 
 	"github.com/egeback/play_media_api/internal/controllers"
 	_ "github.com/egeback/play_media_api/internal/docs"
@@ -32,7 +33,7 @@ import (
 
 // @BasePath /api/v1/
 func main() {
-	fmt.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
+	fmt.Printf("%s Running Play Media API version: %s (%s)\n", time.Now().Format("2006-01-02 15:04:05"), version.BuildVersion, version.BuildTime)
 	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
 	//parsers.Set([]parsers.ParserInterface{new(tv4play.Parser)})
 
@@ -66,6 +67,7 @@ func main() {
 }
 
 func updateShows() {
+	t1 := time.Now()
 	shows := make([]models.Show, 0)
 	for _, parser := range parsers.All("") {
 		s := parser.GetShowsWithSeasons()
@@ -89,8 +91,6 @@ func updateShows() {
 		return shows[i].Slug < shows[j].Slug
 	})
 	models.ShowsSet(shows)
-	fmt.Println("Shows with Seasons", showsWithSeasons)
-	fmt.Println("Shows with no Seasons", showsWithNoSeasons)
-
-	fmt.Println("Done")
+	diff := time.Now().Sub(t1).Seconds()
+	fmt.Printf("%s [shows with-shows]/[total]: %d/%d, this took: %fs\n", time.Now().Format("2006-01-02 15:04:05"), showsWithSeasons, len(shows), diff)
 }
