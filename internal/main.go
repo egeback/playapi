@@ -76,6 +76,7 @@ func updateShows() {
 
 	showsWithSeasons := 0
 	showsWithNoSeasons := 0
+	notProcessed := 0
 
 	for _, show := range shows {
 		if show.Name == "" {
@@ -86,6 +87,9 @@ func updateShows() {
 		} else {
 			showsWithSeasons++
 		}
+		if !show.Prossesed {
+			notProcessed++
+		}
 	}
 	sort.SliceStable(shows, func(i, j int) bool {
 		return shows[i].Slug < shows[j].Slug
@@ -93,4 +97,5 @@ func updateShows() {
 	models.ShowsSet(shows)
 	diff := time.Now().Sub(t1).Seconds()
 	fmt.Printf("%s [shows with-shows]/[total]: %d/%d, this took: %fs\n", time.Now().Format("2006-01-02 15:04:05"), showsWithSeasons, len(shows), diff)
+	fmt.Printf("%s Shows not processed: %d\n", time.Now().Format("2006-01-02 15:04:05"), notProcessed)
 }

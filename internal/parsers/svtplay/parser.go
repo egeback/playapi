@@ -109,7 +109,8 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 								url2 = "https://www.svtplay.se" + x.(string)
 							}
 							//variants.PushBack(
-							variants = append(variants, models.Variant{variantContainer["id"].(string), variantContainer["videoSvtId"].(string), url2})
+							platformSpecific := models.PlatformSpecific{"svt_id": variantContainer["videoSvtId"].(string)}
+							variants = append(variants, models.Variant{ID: variantContainer["id"].(string), PlatformSpecific: platformSpecific, URL: url2})
 						}
 					}
 
@@ -144,8 +145,12 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 					if ok {
 						validTo = vt.(string)
 					}
+					platformSpecific := models.PlatformSpecific{"svt_id": svtID, "video_svt_id": videoSvtID}
 					episodes = append(episodes,
-						models.Episode{id, name, svtID, videoSvtID, slug, descrption, image, url, duration, number, validFrom, validTo, variants})
+						models.Episode{
+							ID: id, Name: name, Slug: slug, LongDescription: descrption,
+							ImageURL: image, URL: url, Duration: duration, Number: number,
+							ValidFrom: validFrom, ValidTo: validTo, Variants: variants, PlatformSpecific: platformSpecific})
 				}
 				season := models.Season{content["id"].(string), content["name"].(string), episodes}
 				//seasons.PushBack(season)
