@@ -137,3 +137,22 @@ func GetIntValue(data map[string]interface{}, param string, def int) int {
 	}
 	return value
 }
+
+//Contains ...
+func Contains(a []string, x string) bool {
+	for _, n := range a {
+		if x == n {
+			return true
+		}
+	}
+	return false
+}
+
+//ExtractStringSlice ...
+func ExtractStringSlice(values []interface{}) []string {
+	s := make([]string, 0, len(values))
+	for _, value := range values {
+		s = append(s, value.(string))
+	}
+	return s
+}

@@ -223,6 +223,7 @@ func (p Parser) GetShows() []models.Show {
 					UpdatedAt:   "",
 					Genre:       genre["name"].(string),
 					Prossesed:   false,
+					Provider:    "svtplay",
 				}
 				//shows.PushBack(show)
 				counter++

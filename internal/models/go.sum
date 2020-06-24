@@ -1,0 +1,4 @@
+github.com/egeback/play_media_api v1.0.3 h1:jmTk/7dhLc2bYGXzf9WMnwJvgBEQTQy/qbZVzluE8yw=
+github.com/egeback/play_media_api/internal v0.0.0-20200622193517-7b39954865db h1:O2UIN27+3WgG9sMpdnPE2JCAjYJq0YvgXgDZ8la91Bk=
+github.com/egeback/play_media_api/internal/utils v0.0.0-20200622193517-7b39954865db h1:pbY+6B9qjzJ9Eoxr0fl/UkSQYkgNGPV/BcHDeWl/6lo=
+github.com/egeback/play_media_api/internal/utils v0.0.0-20200622193517-7b39954865db/go.mod h1:1klMJZdDxJoRnZHciO0dB9RBSTln2mXkdlO2dG8x+NE=

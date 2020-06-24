@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"log"
 	"strconv"
 	"strings"
@@ -26,6 +27,8 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 	pp := ctx.DefaultQuery("prettyPrint", "false")
 	prettyPrint, err2 := strconv.ParseBool(pp)
 
+	q := extractQueryParameter(ctx.DefaultQuery("q", ""))
+
 	if err != nil || err2 != nil {
 		log.Panic(err)
 		log.Panic(err2)
@@ -37,7 +40,7 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 		})
 	}
 
-	shows, err := models.ShowsAll("")
+	shows, err := models.ShowsAll(q...)
 	if err != nil {
 		log.Panic(err)
 		c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
@@ -76,7 +79,7 @@ func (c *Controller) ShowShow(ctx *gin.Context) {
 	prettyPrint := ctx.DefaultQuery("prettyPrint", "false")
 	var show *models.Show
 
-	shows, err := models.ShowsAll(slug)
+	shows, err := models.ShowsAll(models.QueryItem{Field: "slug", Value: slug})
 	if err != nil {
 		c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
 		return
@@ -95,4 +98,32 @@ func (c *Controller) ShowShow(ctx *gin.Context) {
 	}
 	c.createJSONResponsePretty(ctx, show, "seasons")
 	return
+}
+
+func extractQueryParameter(str string) []models.QueryItem {
+	queryItems := make([]models.QueryItem, 0, 0)
+	if len(str) == 0 {
+		return queryItems
+	}
+
+	err := json.Unmarshal([]byte(str), &queryItems)
+	if err != nil {
+		log.Panic(err)
+		return queryItems
+	}
+
+	//a := strings.Split(str, ";")
+	// for _, s := range a {
+	// 	parts := strings.Split(s, ":")
+	// 	if len(parts) == 2 {
+	// 		if strings.Index(s, ",") >= 0 {
+	// 			queryItems = append(queryItems, models.QueryItem{Filter: parts[0], Value: strings.Split(parts[1], ",")})
+	// 		} else {
+	// 			queryItems = append(queryItems, models.QueryItem{Filter: parts[0], Value: parts[1]})
+	// 		}
+	// 	}
+	// }
+
+	return queryItems
+
 }

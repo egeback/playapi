@@ -1,5 +1,11 @@
 package models
 
+import (
+	"strings"
+
+	"github.com/egeback/play_media_api/internal/utils"
+)
+
 // Show handles show information
 type Show struct {
 	ID          string   `json:"-" groups:"api" example:"1"`
@@ -13,26 +19,94 @@ type Show struct {
 	UpdatedAt   string   `json:"updatedAt" groups:"api" example:"2019-12-22"`
 	Genre       string   `json:"genre" groups:"api" example:"2019-12-22"`
 	Prossesed   bool     `json:"-"`
+	Provider    string   `json:"service" groups:"api"`
 	//Data interface
 }
 
 var shows = make([]Show, 0)
+var genres = make(map[string][]*Show, 0)
+var vendor = make(map[string][]*Show, 0)
+
+//QueryItem ...
+type QueryItem struct {
+	Field string      `json:"field"`
+	Value interface{} `json:"value"`
+}
 
 //ShowsAll return shows with query
-func ShowsAll(q string) ([]Show, error) {
-	if q == "" {
+func ShowsAll(queryItems ...QueryItem) ([]Show, error) {
+	if len(queryItems) == 0 {
 		return shows, nil
 	}
 	as := []Show{}
 	for k, s := range shows {
-		if q == s.Slug {
+		match := true
+		for _, q := range queryItems {
+			if strings.ToLower(q.Field) == "slug" {
+				if exclude(q, s.Slug) {
+					match = false
+					break
+				}
+			} else if strings.ToLower(q.Field) == "genre" {
+				if exclude(q, s.Genre) {
+					match = false
+					break
+				}
+			} else if strings.ToLower(q.Field) == "name" {
+				if exclude(q, s.Name) {
+					match = false
+					break
+				}
+			} else if strings.ToLower(q.Field) == "provider" || strings.ToLower(q.Field) == "service" {
+				if exclude(q, s.Provider) {
+					match = false
+					break
+				}
+			}
+		}
+		if match {
 			as = append(as, shows[k])
 		}
 	}
 	return as, nil
 }
 
+func exclude(q QueryItem, value string) bool {
+	switch q.Value.(type) {
+	case []interface{}:
+		if !utils.Contains(utils.ExtractStringSlice(q.Value.([]interface{})), value) {
+			return true
+		}
+	case interface{}:
+		if q.Value.(string) != value {
+			return true
+		}
+	default:
+		return true
+	}
+	return false
+}
+
 //ShowsSet set shows
 func ShowsSet(s []Show) {
 	shows = s
+	g := make(map[string][]*Show, 0)
+	v := make(map[string][]*Show, 0)
+	for _, show := range shows {
+		_, exists := g[show.Genre]
+		if !exists {
+			s := make([]*Show, 0, 0)
+			g[show.Genre] = s
+		}
+		s := g[show.Genre]
+		s = append(s, &show)
+
+		_, exists = v[show.Provider]
+		if !exists {
+			s := make([]*Show, 0, 0)
+			v[show.Provider] = s
+		}
+		s = g[show.Genre]
+		s = append(s, &show)
+	}
 }

@@ -20,3 +20,4 @@ src/__debug_bin
 .DS_Store
 main
 internal/__debug_bin
+download_media_api.code-workspace

@@ -60,6 +60,7 @@ func extractShow(data map[string]interface{}) models.Show {
 		Description: description,
 		UpdatedAt:   updatedAt,
 		Genre:       genre,
+		Provider:    "tv4play",
 	}
 }
 
