@@ -12,6 +12,49 @@ definitions:
         example: http://
         type: string
     type: object
+  models.Episode:
+    properties:
+      duration:
+        type: number
+      id:
+        type: string
+      imageUrl:
+        type: string
+      longDescription:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
+      platform_specific:
+        type: object
+      slug:
+        description: |-
+          SvtID           string    `json:"svtId" groups:"api"`
+          VideoSvtID      string    `json:"videoSvtId" groups:"api"`
+        type: string
+      url:
+        type: string
+      validFrom:
+        type: string
+      validTo:
+        type: string
+      variants:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
+    type: object
+  models.Season:
+    properties:
+      episodes:
+        items:
+          $ref: '#/definitions/models.Episode'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   models.Show:
     properties:
       api_url:
@@ -34,7 +77,7 @@ definitions:
         type: string
       seasons:
         items:
-          type: Season
+          $ref: '#/definitions/models.Season'
         type: array
       service:
         type: string
@@ -43,6 +86,13 @@ definitions:
         type: string
       updatedAt:
         example: "2019-12-22"
+        type: string
+    type: object
+  models.Variant:
+    properties:
+      platform_specific:
+        type: object
+      url:
         type: string
     type: object
 info:

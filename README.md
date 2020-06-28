@@ -10,3 +10,4 @@ Microservice parsing play services to act as API
 * [ ] Authentication
 * [ ] Sort out what from internal should be in pkg?
 * [x] Fix swag from docker
+* [ ] Test cases
