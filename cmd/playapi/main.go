@@ -20,7 +20,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Play API
+// @title Play service API
 // @version 1.0.5
 // @description API including SVT and TV4 Play
 
