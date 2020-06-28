@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/go-version"
@@ -25,9 +24,20 @@ func NewController() *Controller {
 	return &Controller{}
 }
 
-//Response used to describe api response
-type Response struct {
-	Data interface{} `json:"data" groups:"api"`
+// //PagedResponseLinks ...
+// type PagedResponseLinks struct {
+// 	Next string `json:"next" groups:"api"`
+// 	Prev string `json:"prev" groups:"api"`
+// 	Self string `json:"self" groups:"api"`
+// }
+
+//PagedResponse used to describe api response
+type PagedResponse struct {
+	//Links   PagedResponseLinks `json:"_links" groups:"api"`
+	Limit   int         `json:"limit" groups:"api"`
+	Size    int         `json:"size" groups:"api"`
+	Start   int         `json:"start" groups:"api"`
+	Results interface{} `json:"results" groups:"api"`
 }
 
 //ErrorResponse used to descrive api error response
@@ -82,15 +92,4 @@ func marshal(data interface{}, prettyPrint bool, groups ...string) ([]byte, erro
 		return json.MarshalIndent(dest, "", "  ")
 	}
 	return json.Marshal(dest)
-}
-
-//GetIntValueContext ...
-func GetIntValueContext(ctx *gin.Context, field string) *int {
-	value := ctx.DefaultQuery(field, "")
-
-	intValue, err := strconv.Atoi(value)
-	if err == nil {
-		return nil
-	}
-	return &intValue
 }

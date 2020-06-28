@@ -163,3 +163,21 @@ func ExtractStringSlice(values []interface{}) []string {
 	}
 	return s
 }
+
+//GetIntValueFromString ...
+func GetIntValueFromString(value string, defaultValue int) *int {
+	intValue, err := strconv.Atoi(value)
+	if err != nil {
+		return &defaultValue
+	}
+	return &intValue
+}
+
+//GetBoolValueFromString ...
+func GetBoolValueFromString(value string, defaultValue bool) *bool {
+	intValue, err := strconv.ParseBool(value)
+	if err != nil {
+		return &defaultValue
+	}
+	return &intValue
+}

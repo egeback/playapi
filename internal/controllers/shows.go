@@ -2,13 +2,17 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/egeback/playapi/internal/models"
+	"github.com/egeback/playapi/internal/utils"
 	"github.com/gin-gonic/gin"
 )
+
+var defaultLimitInt = 100
+var defaultLimit = &defaultLimitInt
 
 //ListShows function to return shows from API
 // @Summary List shows
@@ -23,42 +27,72 @@ import (
 // @Failure 500 {object} ErrorResponse
 // @Router /shows [get]
 func (c *Controller) ListShows(ctx *gin.Context) {
-	seasons := ctx.DefaultQuery("showSeasons", "false")
-	displaySeasons, err := strconv.ParseBool(seasons)
+	displaySeasons := utils.GetBoolValueFromString(ctx.DefaultQuery("showSeasons", ""), false)
+	prettyPrint := utils.GetBoolValueFromString(ctx.DefaultQuery("prettyPrint", ""), false)
 
-	pp := ctx.DefaultQuery("prettyPrint", "false")
-	prettyPrint, err2 := strconv.ParseBool(pp)
+	limit := utils.GetIntValueFromString(ctx.DefaultQuery("limit", ""), *defaultLimit)
+	offset := utils.GetIntValueFromString(ctx.DefaultQuery("offset", ""), 0)
 
-	q := extractQueryParameter(ctx.DefaultQuery("q", ""))
+	q, err := extractQueryParameter(ctx.DefaultQuery("q", ""))
 
-	if err != nil || err2 != nil {
-		log.Panic(err)
-		log.Panic(err2)
+	if *limit < 0 || *offset < 0 {
+		if err == nil {
+			err = errors.New("Limit or Offset query parameters < 0")
+		}
+	}
+
+	if err != nil {
 		ctx.JSON(200, gin.H{
-			"data":       "coudld not parse quyery parameters",
+			"data":       err.Error(),
 			"status":     "error",
 			"statusCode": 400,
 			"data_type":  "String",
 		})
+		return
 	}
 
 	shows, err := models.ShowsAll(q...)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
 		c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
 	}
 
-	if !displaySeasons {
-		if prettyPrint {
-			c.createJSONResponsePretty(ctx, shows)
+	// schema := ""
+	// if ctx.Request.TLS == nil {
+	// 	schema = "http"
+	// } else {
+	// 	schema =
+	// 		"https"
+	// }
+
+	size := len(shows)
+
+	if *offset > size {
+		shows = make([]models.Show, 0, 0)
+	} else if *offset+*limit > size {
+		shows = shows[*offset:]
+	} else {
+		shows = shows[*offset : *offset+*limit]
+	}
+
+	response := PagedResponse{
+		Limit:   *limit,
+		Size:    size,
+		Start:   *offset,
+		Results: shows,
+	}
+
+	if !*displaySeasons {
+		if *prettyPrint {
+			c.createJSONResponsePretty(ctx, response)
 		} else {
-			c.createJSONResponse(ctx, shows)
+			c.createJSONResponse(ctx, response)
 		}
 	} else {
-		if prettyPrint {
-			c.createJSONResponsePretty(ctx, shows, "seasons")
+		if *prettyPrint {
+			c.createJSONResponsePretty(ctx, response, "seasons")
 		} else {
-			c.createJSONResponse(ctx, shows, "seasons")
+			c.createJSONResponse(ctx, response, "seasons")
 		}
 	}
 }
@@ -102,16 +136,16 @@ func (c *Controller) ShowShow(ctx *gin.Context) {
 	return
 }
 
-func extractQueryParameter(str string) []models.QueryItem {
+func extractQueryParameter(str string) ([]models.QueryItem, error) {
 	queryItems := make([]models.QueryItem, 0, 0)
 	if len(str) == 0 {
-		return queryItems
+		return queryItems, nil
 	}
 
 	err := json.Unmarshal([]byte(str), &queryItems)
 	if err != nil {
-		log.Panic(err)
-		return queryItems
+		log.Println(err)
+		return nil, err
 	}
 
 	//a := strings.Split(str, ";")
@@ -126,6 +160,6 @@ func extractQueryParameter(str string) []models.QueryItem {
 	// 	}
 	// }
 
-	return queryItems
+	return queryItems, nil
 
 }

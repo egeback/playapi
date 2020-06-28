@@ -5,5 +5,7 @@ Microservice parsing play services to act as API
 
 ## TODO
 
-* Paging support
-* News
+* [x] Paging support
+* [ ] News
+* [ ] Authentication
+* [ ] Sort out what from internal should be in pkg?
