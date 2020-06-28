@@ -20,7 +20,7 @@ var doc = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "API Support",
-            "url": "http://xxxx.xxx.xx",
+            "url": "https://github.com/egeback/playapi/issues",
             "email": "support@egeback.se"
         },
         "license": {
@@ -267,7 +267,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "/api/v1/",
 	Schemes:     []string{},
-	Title:       "Play API",
+	Title:       "Play service API",
 	Description: "API including SVT and TV4 Play",
 }
 

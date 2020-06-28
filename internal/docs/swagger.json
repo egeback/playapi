@@ -2,10 +2,10 @@
     "swagger": "2.0",
     "info": {
         "description": "API including SVT and TV4 Play",
-        "title": "Play API",
+        "title": "Play service API",
         "contact": {
             "name": "API Support",
-            "url": "http://xxxx.xxx.xx",
+            "url": "https://github.com/egeback/playapi/issues",
             "email": "support@egeback.se"
         },
         "license": {
