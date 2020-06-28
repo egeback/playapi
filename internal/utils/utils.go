@@ -15,14 +15,22 @@ import (
 
 // GetJSON ...
 func GetJSON(url string) map[string]interface{} {
-	resp, err := http.Get(url)
+	//resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	req.Header.Set("User-Agent", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0")
+	client := &http.Client{}
+	resp, err := client.Do(req)
 
 	if err != nil {
-		log.Panic(err)
+		log.Println("Error getting JSON")
+		log.Println(err)
 		return make(map[string]interface{})
 	}
 
+	defer resp.Body.Close()
+
 	bytes, err := ioutil.ReadAll(resp.Body)
+
 	if err != nil {
 		log.Panic(err)
 		return make(map[string]interface{})
@@ -35,7 +43,6 @@ func GetJSON(url string) map[string]interface{} {
 		resp.Body.Close()
 		return result
 	}
-	resp.Body.Close()
 
 	return result
 }
