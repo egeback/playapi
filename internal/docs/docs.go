@@ -203,68 +203,6 @@ var doc = `{
                 }
             }
         },
-        "models.Episode": {
-            "type": "object",
-            "properties": {
-                "duration": {
-                    "type": "number"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "longDescription": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "number": {
-                    "type": "string"
-                },
-                "platform_specific": {
-                    "type": "object"
-                },
-                "slug": {
-                    "description": "SvtID           string    ` + "`" + `json:\"svtId\" groups:\"api\"` + "`" + `\nVideoSvtID      string    ` + "`" + `json:\"videoSvtId\" groups:\"api\"` + "`" + `",
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                },
-                "validFrom": {
-                    "type": "string"
-                },
-                "validTo": {
-                    "type": "string"
-                },
-                "variants": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Variant"
-                    }
-                }
-            }
-        },
-        "models.Season": {
-            "type": "object",
-            "properties": {
-                "episodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Episode"
-                    }
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Show": {
             "type": "object",
             "properties": {
@@ -295,7 +233,7 @@ var doc = `{
                 "seasons": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Season"
+                        "type": "Season"
                     }
                 },
                 "service": {
@@ -308,17 +246,6 @@ var doc = `{
                 "updatedAt": {
                     "type": "string",
                     "example": "2019-12-22"
-                }
-            }
-        },
-        "models.Variant": {
-            "type": "object",
-            "properties": {
-                "platform_specific": {
-                    "type": "object"
-                },
-                "url": {
-                    "type": "string"
                 }
             }
         }
