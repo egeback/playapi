@@ -3,6 +3,8 @@
 # Start from the latest golang base image
 FROM golang:latest
 
+RUN go get -u github.com/swaggo/swag/cmd/swag
+
 # Add Maintainer Info
 LABEL maintainer="Marky Egebäck <marky@egeback.se>"
 

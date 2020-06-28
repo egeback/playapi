@@ -24,8 +24,6 @@ type Show struct {
 }
 
 var shows = make([]Show, 0)
-var genres = make(map[string][]*Show, 0)
-var vendor = make(map[string][]*Show, 0)
 
 //QueryItem ...
 type QueryItem struct {
