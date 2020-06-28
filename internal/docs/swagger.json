@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "API including SVT and TV4 Play",
-        "title": "Play Media API",
+        "title": "Play API",
         "contact": {
             "name": "API Support",
             "url": "http://xxxx.xxx.xx",
@@ -12,7 +12,7 @@
             "name": "MIT License",
             "url": "https://opensource.org/licenses/MIT"
         },
-        "version": "1.0"
+        "version": "1.0.5"
     },
     "basePath": "/api/v1/",
     "paths": {
@@ -76,6 +76,13 @@
                         "format": "bool",
                         "description": "pretty print show",
                         "name": "prettyPrint",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "bool",
+                        "description": "show seasons",
+                        "name": "showSeasons",
                         "in": "query"
                     }
                 ],
@@ -186,6 +193,9 @@
                 "duration": {
                     "type": "number"
                 },
+                "id": {
+                    "type": "string"
+                },
                 "imageUrl": {
                     "type": "string"
                 },
@@ -198,10 +208,11 @@
                 "number": {
                     "type": "string"
                 },
-                "slug": {
-                    "type": "string"
+                "platform_specific": {
+                    "type": "object"
                 },
-                "svtId": {
+                "slug": {
+                    "description": "SvtID           string    `json:\"svtId\" groups:\"api\"`\nVideoSvtID      string    `json:\"videoSvtId\" groups:\"api\"`",
                     "type": "string"
                 },
                 "url": {
@@ -218,9 +229,6 @@
                     "items": {
                         "$ref": "#/definitions/models.Variant"
                     }
-                },
-                "videoSvtId": {
-                    "type": "string"
                 }
             }
         },
@@ -244,6 +252,10 @@
         "models.Show": {
             "type": "object",
             "properties": {
+                "api_url": {
+                    "type": "string",
+                    "example": "http://adad.ad/se"
+                },
                 "decription": {
                     "type": "string",
                     "example": "Show about x"
@@ -260,11 +272,18 @@
                     "type": "string",
                     "example": "Show Name"
                 },
+                "page_url": {
+                    "type": "string",
+                    "example": "http://adad.ad/se"
+                },
                 "seasons": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Season"
                     }
+                },
+                "service": {
+                    "type": "string"
                 },
                 "slug": {
                     "type": "string",
@@ -273,18 +292,14 @@
                 "updatedAt": {
                     "type": "string",
                     "example": "2019-12-22"
-                },
-                "url": {
-                    "type": "string",
-                    "example": "http://adad.ad/se"
                 }
             }
         },
         "models.Variant": {
             "type": "object",
             "properties": {
-                "svtId": {
-                    "type": "string"
+                "platform_specific": {
+                    "type": "object"
                 },
                 "url": {
                     "type": "string"

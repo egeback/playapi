@@ -16,6 +16,8 @@ definitions:
     properties:
       duration:
         type: number
+      id:
+        type: string
       imageUrl:
         type: string
       longDescription:
@@ -24,9 +26,12 @@ definitions:
         type: string
       number:
         type: string
+      platform_specific:
+        type: object
       slug:
-        type: string
-      svtId:
+        description: |-
+          SvtID           string    `json:"svtId" groups:"api"`
+          VideoSvtID      string    `json:"videoSvtId" groups:"api"`
         type: string
       url:
         type: string
@@ -38,8 +43,6 @@ definitions:
         items:
           $ref: '#/definitions/models.Variant'
         type: array
-      videoSvtId:
-        type: string
     type: object
   models.Season:
     properties:
@@ -54,6 +57,9 @@ definitions:
     type: object
   models.Show:
     properties:
+      api_url:
+        example: http://adad.ad/se
+        type: string
       decription:
         example: Show about x
         type: string
@@ -66,24 +72,26 @@ definitions:
       name:
         example: Show Name
         type: string
+      page_url:
+        example: http://adad.ad/se
+        type: string
       seasons:
         items:
           $ref: '#/definitions/models.Season'
         type: array
+      service:
+        type: string
       slug:
         example: show_name
         type: string
       updatedAt:
         example: "2019-12-22"
         type: string
-      url:
-        example: http://adad.ad/se
-        type: string
     type: object
   models.Variant:
     properties:
-      svtId:
-        type: string
+      platform_specific:
+        type: object
       url:
         type: string
     type: object
@@ -96,8 +104,8 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  title: Play Media API
-  version: "1.0"
+  title: Play API
+  version: 1.0.5
 paths:
   /ping:
     get:
@@ -136,6 +144,11 @@ paths:
         format: bool
         in: query
         name: prettyPrint
+        type: string
+      - description: show seasons
+        format: bool
+        in: query
+        name: showSeasons
         type: string
       produces:
       - application/json

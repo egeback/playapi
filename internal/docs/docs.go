@@ -93,6 +93,13 @@ var doc = `{
                         "description": "pretty print show",
                         "name": "prettyPrint",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "bool",
+                        "description": "show seasons",
+                        "name": "showSeasons",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -202,6 +209,9 @@ var doc = `{
                 "duration": {
                     "type": "number"
                 },
+                "id": {
+                    "type": "string"
+                },
                 "imageUrl": {
                     "type": "string"
                 },
@@ -214,10 +224,11 @@ var doc = `{
                 "number": {
                     "type": "string"
                 },
-                "slug": {
-                    "type": "string"
+                "platform_specific": {
+                    "type": "object"
                 },
-                "svtId": {
+                "slug": {
+                    "description": "SvtID           string    ` + "`" + `json:\"svtId\" groups:\"api\"` + "`" + `\nVideoSvtID      string    ` + "`" + `json:\"videoSvtId\" groups:\"api\"` + "`" + `",
                     "type": "string"
                 },
                 "url": {
@@ -234,9 +245,6 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/models.Variant"
                     }
-                },
-                "videoSvtId": {
-                    "type": "string"
                 }
             }
         },
@@ -260,6 +268,10 @@ var doc = `{
         "models.Show": {
             "type": "object",
             "properties": {
+                "api_url": {
+                    "type": "string",
+                    "example": "http://adad.ad/se"
+                },
                 "decription": {
                     "type": "string",
                     "example": "Show about x"
@@ -276,11 +288,18 @@ var doc = `{
                     "type": "string",
                     "example": "Show Name"
                 },
+                "page_url": {
+                    "type": "string",
+                    "example": "http://adad.ad/se"
+                },
                 "seasons": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Season"
                     }
+                },
+                "service": {
+                    "type": "string"
                 },
                 "slug": {
                     "type": "string",
@@ -289,18 +308,14 @@ var doc = `{
                 "updatedAt": {
                     "type": "string",
                     "example": "2019-12-22"
-                },
-                "url": {
-                    "type": "string",
-                    "example": "http://adad.ad/se"
                 }
             }
         },
         "models.Variant": {
             "type": "object",
             "properties": {
-                "svtId": {
-                    "type": "string"
+                "platform_specific": {
+                    "type": "object"
                 },
                 "url": {
                     "type": "string"
@@ -321,11 +336,11 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "1.0",
+	Version:     "1.0.5",
 	Host:        "",
 	BasePath:    "/api/v1/",
 	Schemes:     []string{},
-	Title:       "Play Media API",
+	Title:       "Play API",
 	Description: "API including SVT and TV4 Play",
 }
 

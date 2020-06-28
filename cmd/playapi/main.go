@@ -5,13 +5,13 @@ import (
 	"sort"
 	"time"
 
-	"github.com/egeback/playapi/internal/controllers"
 	_ "github.com/egeback/playapi/internal/docs"
 	"github.com/egeback/playapi/internal/models"
 	"github.com/egeback/playapi/internal/parsers"
 	"github.com/egeback/playapi/internal/parsers/svtplay"
 	"github.com/egeback/playapi/internal/parsers/tv4play"
 	"github.com/egeback/playapi/internal/version"
+	"github.com/egeback/playapi/pkg/controllers"
 	"github.com/gin-gonic/gin"
 	"github.com/jasonlvhit/gocron"
 	jsonp "github.com/tomwei7/gin-jsonp"
@@ -20,8 +20,8 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Play Media API
-// @version 1.0
+// @title Play API
+// @version 1.0.5
 // @description API including SVT and TV4 Play
 
 // @contact.name API Support
@@ -52,10 +52,10 @@ func main() {
 		}
 		common := v1.Group("/")
 		{
-			common.GET("ping", c.Ping)
+			common.GET("/ping", c.Ping)
+			common.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}
 	}
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	go func() {
 		gocron.Every(15).Minutes().Do(updateShows)
