@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/egeback/play_media_api/internal/models"
-	"github.com/egeback/play_media_api/internal/parsers"
-	"github.com/egeback/play_media_api/internal/utils"
+	"github.com/egeback/playapi/internal/models"
+	"github.com/egeback/playapi/internal/parsers"
+	"github.com/egeback/playapi/internal/utils"
 )
 
 // Parser ...

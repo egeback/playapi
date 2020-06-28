@@ -1,2 +1,3 @@
-# stream_media_api
-Api listing stream media
+# Play API
+
+Microservice parsing play services to act as API

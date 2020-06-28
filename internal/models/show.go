@@ -3,7 +3,7 @@ package models
 import (
 	"strings"
 
-	"github.com/egeback/play_media_api/internal/utils"
+	"github.com/egeback/playapi/internal/utils"
 )
 
 // Show handles show information

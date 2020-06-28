@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/egeback/play_media_api/internal/models"
+	"github.com/egeback/playapi/internal/models"
 	"github.com/gin-gonic/gin"
 )
 

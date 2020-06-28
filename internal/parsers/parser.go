@@ -1,7 +1,7 @@
 package parsers
 
 import (
-	"github.com/egeback/play_media_api/internal/models"
+	"github.com/egeback/playapi/internal/models"
 )
 
 const nrWorkers = 100
