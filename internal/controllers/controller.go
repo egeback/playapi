@@ -24,13 +24,6 @@ func NewController() *Controller {
 	return &Controller{}
 }
 
-// //PagedResponseLinks ...
-// type PagedResponseLinks struct {
-// 	Next string `json:"next" groups:"api"`
-// 	Prev string `json:"prev" groups:"api"`
-// 	Self string `json:"self" groups:"api"`
-// }
-
 //PagedResponse used to describe api response
 type PagedResponse struct {
 	//Links   PagedResponseLinks `json:"_links" groups:"api"`
@@ -47,6 +40,7 @@ type ErrorResponse struct {
 	MoreInfo string `json:"more_info" groups:"api" example:"http://"`
 }
 
+//createJSONResponse return provided object as a JSON object
 func (c *Controller) createJSONResponse(ctx *gin.Context, obj interface{}, groups ...string) {
 	data, err := marshal(obj, false, groups...)
 	if err != nil {
@@ -55,6 +49,7 @@ func (c *Controller) createJSONResponse(ctx *gin.Context, obj interface{}, group
 	ctx.Data(http.StatusOK, "application/json", data)
 }
 
+//createJSONResponse return provided object as a JSON object pretty printed
 func (c *Controller) createJSONResponsePretty(ctx *gin.Context, obj interface{}, groups ...string) {
 	data, err := marshal(obj, true, groups...)
 	if err != nil {
@@ -63,14 +58,16 @@ func (c *Controller) createJSONResponsePretty(ctx *gin.Context, obj interface{},
 	ctx.Data(http.StatusOK, "application/json", data)
 }
 
+//createErrorResponse respons with a JSON representation of a ErrorResponse struct
 func (c *Controller) createErrorResponse(ctx *gin.Context, statusCode int, code int, message string) {
 	ctx.JSON(statusCode, ErrorResponse{
 		Message:  message,
 		Code:     code,
-		MoreInfo: fmt.Sprint("/%s", code),
+		MoreInfo: fmt.Sprintf("/%d", code),
 	})
 }
 
+//marshal data object with help of sheriff
 func marshal(data interface{}, prettyPrint bool, groups ...string) ([]byte, error) {
 	v1, err := version.NewVersion(apiVersion)
 	if err != nil {

@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"sort"
 	"time"
 
@@ -18,6 +20,7 @@ import (
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 // @title Play service API
@@ -33,11 +36,25 @@ import (
 
 // @BasePath /api/v1/
 func main() {
-	fmt.Printf("%s Running Play Media API version: %s (%s)\n", time.Now().Format("2006-01-02 15:04:05"), version.BuildVersion, version.BuildTime)
-	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
-	//parsers.Set([]parsers.ParserInterface{new(tv4play.Parser)})
+	// Configure Logging
+	logFileLocation := os.Getenv("DOWNLOADER_LOG_FILE_LOCATION")
+	if logFileLocation != "" {
+		log.SetOutput(&lumberjack.Logger{
+			Filename:   logFileLocation,
+			MaxSize:    500, // megabytes
+			MaxBackups: 3,
+			MaxAge:     28,   //days
+			Compress:   true, // disabled by default
+		})
+	}
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	//r := gin.Default()
+	log.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
+
+	//Add parsers
+	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
+
+	//Configure gin
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(jsonp.JsonP())
@@ -57,15 +74,21 @@ func main() {
 		}
 	}
 
+	//Schedule updates of shows
 	go func() {
 		gocron.Every(15).Minutes().Do(updateShows)
 		<-gocron.Start()
 	}()
+
+	//Run inital show parsing
 	updateShows()
 
+	//Start server
 	r.Run(":8080")
+	os.Exit(0)
 }
 
+//Update shows by iterating parsers and run GetShowsWithSeasons
 func updateShows() {
 	t1 := time.Now()
 	shows := make([]models.Show, 0)
@@ -78,6 +101,7 @@ func updateShows() {
 	showsWithNoSeasons := 0
 	notProcessed := 0
 
+	//Gather statistics
 	for _, show := range shows {
 		if show.Name == "" {
 			fmt.Println(show)
@@ -91,10 +115,14 @@ func updateShows() {
 			notProcessed++
 		}
 	}
+
+	//Sort slice
 	sort.SliceStable(shows, func(i, j int) bool {
 		return shows[i].Slug < shows[j].Slug
 	})
 	models.ShowsSet(shows)
+
+	//Calculate time to run
 	diff := time.Now().Sub(t1).Seconds()
 	fmt.Printf("%s [shows with-shows]/[total]: %d/%d, this took: %fs\n", time.Now().Format("2006-01-02 15:04:05"), showsWithSeasons, len(shows), diff)
 	fmt.Printf("%s Shows not processed: %d\n", time.Now().Format("2006-01-02 15:04:05"), notProcessed)

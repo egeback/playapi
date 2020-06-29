@@ -57,14 +57,6 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 		c.createErrorResponse(ctx, 500, 100, "Could not fetch shows")
 	}
 
-	// schema := ""
-	// if ctx.Request.TLS == nil {
-	// 	schema = "http"
-	// } else {
-	// 	schema =
-	// 		"https"
-	// }
-
 	size := len(shows)
 
 	if *offset > size {
@@ -75,6 +67,7 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 		shows = shows[*offset : *offset+*limit]
 	}
 
+	//Create paged response struct
 	response := PagedResponse{
 		Limit:   *limit,
 		Size:    size,
@@ -136,6 +129,7 @@ func (c *Controller) ShowShow(ctx *gin.Context) {
 	return
 }
 
+//Extract Query Parameters from json object
 func extractQueryParameter(str string) ([]models.QueryItem, error) {
 	queryItems := make([]models.QueryItem, 0, 0)
 	if len(str) == 0 {
@@ -147,18 +141,6 @@ func extractQueryParameter(str string) ([]models.QueryItem, error) {
 		log.Println(err)
 		return nil, err
 	}
-
-	//a := strings.Split(str, ";")
-	// for _, s := range a {
-	// 	parts := strings.Split(s, ":")
-	// 	if len(parts) == 2 {
-	// 		if strings.Index(s, ",") >= 0 {
-	// 			queryItems = append(queryItems, models.QueryItem{Filter: parts[0], Value: strings.Split(parts[1], ",")})
-	// 		} else {
-	// 			queryItems = append(queryItems, models.QueryItem{Filter: parts[0], Value: parts[1]})
-	// 		}
-	// 	}
-	// }
 
 	return queryItems, nil
 

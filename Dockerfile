@@ -11,6 +11,12 @@ LABEL maintainer="Marky Egebäck <marky@egeback.se>"
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
+# Build Args
+ARG LOG_DIR=/app/logs
+
+# Environment Variables
+ENV LOG_FILE_LOCATION=${LOG_DIR}/app.log 
+
 # Copy go mod and sum files
 COPY go.mod go.sum ./
 
@@ -26,6 +32,9 @@ RUN ./cmd/build.sh
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
+
+# Declare volumes to mount
+VOLUME [${LOG_DIR}]
 
 # Command to run the executable
 CMD ["./playapi"]

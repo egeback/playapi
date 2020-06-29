@@ -20,18 +20,17 @@ type Show struct {
 	Genre       string   `json:"genre" groups:"api" example:"2019-12-22"`
 	Prossesed   bool     `json:"-"`
 	Provider    string   `json:"service" groups:"api"`
-	//Data interface
 }
 
 var shows = make([]Show, 0)
 
-//QueryItem ...
+//QueryItem struct with field and value data
 type QueryItem struct {
 	Field string      `json:"field"`
 	Value interface{} `json:"value"`
 }
 
-//ShowsAll return shows with query
+//ShowsAll return shows with query, filters on slug, genre, name, provider/service
 func ShowsAll(queryItems ...QueryItem) ([]Show, error) {
 	if len(queryItems) == 0 {
 		return shows, nil
@@ -69,6 +68,7 @@ func ShowsAll(queryItems ...QueryItem) ([]Show, error) {
 	return as, nil
 }
 
+// Function to determine an item should be excluded based on query item and value
 func exclude(q QueryItem, value string) bool {
 	switch q.Value.(type) {
 	case []interface{}:

@@ -10,14 +10,15 @@ import (
 	"net/url"
 	"reflect"
 	"strconv"
-	"strings"
 )
 
-// GetJSON ...
+// GetJSON downloads contents of url and returns json representation by unmarshal result
 func GetJSON(url string) map[string]interface{} {
-	//resp, err := http.Get(url)
 	req, err := http.NewRequest("GET", url, nil)
+
+	//Fix for SvtPlay
 	req.Header.Set("User-Agent", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0")
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
@@ -32,7 +33,7 @@ func GetJSON(url string) map[string]interface{} {
 	bytes, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
 		return make(map[string]interface{})
 	}
 
@@ -47,61 +48,13 @@ func GetJSON(url string) map[string]interface{} {
 	return result
 }
 
-// Quote ...
+// Quote string for url use
 func Quote(s string) string {
 	url := (&url.URL{Path: s}).RequestURI()
 	return url
-	//strings.ReplaceAll(url, ",", "%2C")
 }
 
-type tagOptions string
-
-func (o tagOptions) Contains(optionName string) bool {
-	if len(o) == 0 {
-		return false
-	}
-	s := string(o)
-	for s != "" {
-		var next string
-		i := strings.Index(s, ",")
-		if i >= 0 {
-			s, next = s[:i], s[i+1:]
-		}
-		if s == optionName {
-			return true
-		}
-		s = next
-	}
-	return false
-}
-
-// ParseTag ...
-func ParseTag(tag string) (string, tagOptions) {
-	if idx := strings.Index(tag, ","); idx != -1 {
-		return tag[:idx], tagOptions(tag[idx+1:])
-	}
-	return tag, tagOptions("")
-}
-
-// IsEmptyValue ...
-func IsEmptyValue(v reflect.Value) bool {
-	switch v.Kind() {
-	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
-		return v.Len() == 0
-	case reflect.Bool:
-		return !v.Bool()
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return v.Int() == 0
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
-		return v.Uint() == 0
-	case reflect.Float32, reflect.Float64:
-		return v.Float() == 0
-	case reflect.Interface, reflect.Ptr:
-		return v.IsNil()
-	}
-	return false
-}
-
+//GetStringValue from interface
 func GetStringValue(data map[string]interface{}, param string, def string) string {
 	value := def
 	if _, ok := data[param]; ok {
@@ -126,6 +79,7 @@ func GetStringValue(data map[string]interface{}, param string, def string) strin
 	return value
 }
 
+//GetIntValue from interface
 func GetIntValue(data map[string]interface{}, param string, def int) int {
 	value := def
 	if _, ok := data[param]; ok {
@@ -145,7 +99,7 @@ func GetIntValue(data map[string]interface{}, param string, def int) int {
 	return value
 }
 
-//Contains ...
+//Contains checks if string array contains string
 func Contains(a []string, x string) bool {
 	for _, n := range a {
 		if x == n {
@@ -155,7 +109,7 @@ func Contains(a []string, x string) bool {
 	return false
 }
 
-//ExtractStringSlice ...
+//ExtractStringSlice gets string slice from interface
 func ExtractStringSlice(values []interface{}) []string {
 	s := make([]string, 0, len(values))
 	for _, value := range values {
@@ -164,7 +118,7 @@ func ExtractStringSlice(values []interface{}) []string {
 	return s
 }
 
-//GetIntValueFromString ...
+//GetIntValueFromString from interface
 func GetIntValueFromString(value string, defaultValue int) *int {
 	intValue, err := strconv.Atoi(value)
 	if err != nil {
@@ -173,7 +127,7 @@ func GetIntValueFromString(value string, defaultValue int) *int {
 	return &intValue
 }
 
-//GetBoolValueFromString ...
+//GetBoolValueFromString from interface
 func GetBoolValueFromString(value string, defaultValue bool) *bool {
 	intValue, err := strconv.ParseBool(value)
 	if err != nil {

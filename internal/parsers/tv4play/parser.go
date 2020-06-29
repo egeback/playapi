@@ -9,7 +9,7 @@ import (
 	slugger "github.com/gosimple/slug"
 )
 
-// Parser ...
+// Parser stuct
 type Parser struct {
 	parsers.ParserInterface
 }
@@ -19,6 +19,7 @@ func (p Parser) Name() string {
 	return "tv4Play"
 }
 
+// Update genre to better match svtplay
 func updateGenre(genre string) string {
 	updatedGenre := map[string]string{
 		"dokumentärer":   "Dokumentär",
@@ -45,7 +46,6 @@ func extractShow(data map[string]interface{}) models.Show {
 	description := utils.GetStringValue(data, "description", "")
 	genre := utils.GetStringValue(data, "category_nid", "")
 	genre = updateGenre(genre)
-	//videoAssetId := GetStringValue(data, "video_asset_id", "")
 
 	url := fmt.Sprintf("https://api.tv4play.se/play/video_assets?platform=tablet&per_page=1000&is_live=false&type=episode&page=1&node_nids=%s&start=0", utils.Quote(slug))
 	pageURL := fmt.Sprintf("https://www.tv4play.se/program/%s", utils.Quote(slug))
@@ -64,7 +64,7 @@ func extractShow(data map[string]interface{}) models.Show {
 	}
 }
 
-//GetSeasons ...
+//GetSeasons from given show
 func (p Parser) GetSeasons(show models.Show) []models.Season {
 	data := utils.GetJSON(show.APIURL)
 	seasons := make(map[string]models.Season)
@@ -81,14 +81,12 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 		slug := slugger.MakeLang(title, "sv")
 		id := utils.GetStringValue(result, "id", "0")
 		description := utils.GetStringValue(result, "description", "")
-		//tags := GetStringValue(result, "tags", "")
 
 		image := utils.GetStringValue(result, "image", "")
 		season := utils.GetStringValue(result, "season", "0")
 		episodeNr := utils.GetStringValue(result, "episode", "0")
 		publishedDateTime := utils.GetStringValue(result, "published_date_time", "")
 		expireDateTime := utils.GetStringValue(result, "expire_date_time", "")
-		//isDrmProtected := GetStringValue(result, "is_drm_protected", "")
 
 		_, exists := seasons[season]
 		if !exists {
@@ -121,7 +119,7 @@ func (p Parser) GetSeasons(show models.Show) []models.Season {
 	return values
 }
 
-//GetShows ...
+//GetShows from api.tv4play.se
 func (p Parser) GetShows() []models.Show {
 	data := utils.GetJSON("https://api.tv4play.se/play/programs?is_active=true&platform=tablet&per_page=1000&fl=nid,name,program_image,is_premium,updated_at,channel,description,category_nid&start=0")
 	totalHits := int(data["total_hits"].(float64))
@@ -138,7 +136,7 @@ func (p Parser) GetShows() []models.Show {
 
 }
 
-// GetShowsWithSeasons ...
+// GetShowsWithSeasons by using GetSeasonsConcurent
 func (p Parser) GetShowsWithSeasons() []models.Show {
 	shows := p.GetShows()
 	return parsers.GetSeasonsConcurent(p, shows)
