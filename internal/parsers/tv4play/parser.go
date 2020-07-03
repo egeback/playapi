@@ -40,11 +40,10 @@ func updateGenre(genre *string) *string {
 }
 
 func extractShow(data map[string]interface{}) models.Show {
-	name := utils.GetStringValue(data, "name", nil) //data["name"].(string)
+	name := utils.GetStringValue(data, "name", nil)
 	slug := utils.GetStringValue(data, "nid", nil)
 
 	programImage := utils.GetStringValue(data, "program_image", nil)
-	//id := utils.GetStringValue(data, "id", nil)
 	updatedAtString := utils.GetStringValue(data, "updated_at", nil)
 	description := utils.GetStringValue(data, "description", nil)
 	genre := utils.GetStringValue(data, "category_nid", nil)
@@ -201,7 +200,6 @@ func (p Parser) GetSeasons(show *models.Show) []models.Season {
 
 	if len(results) == 0 {
 		return p.getSeasonsBackup(show)
-		//return make([]models.Season, 0, 0)
 	}
 
 	layout := "2006-01-02T15:04:05-07:00"
@@ -322,8 +320,6 @@ func (p Parser) GetShows() []models.Show {
 
 		programImage := utils.GetStringValue(program, "image", nil)
 		id := utils.GetStringValue(program, "id", nil)
-		//updatedAt := utils.GetStringValue(program, "updated_at", "")
-		//description := utils.GetStringValue(program, "description", "")
 		category := utils.GetMapValue(program, "category")
 		genre := utils.GetStringValue(*category, "name", nil)
 
@@ -339,8 +335,6 @@ func (p Parser) GetShows() []models.Show {
 			APIURL:   &url,
 			PageURL:  &pageURL,
 			ImageURL: programImage,
-			//Description: description,
-			//UpdatedAt:   updatedAt,
 			Genre:    genre,
 			Provider: "tv4play",
 		}
@@ -351,7 +345,6 @@ func (p Parser) GetShows() []models.Show {
 
 //GetShows2 from api.tv4play.se
 func (p Parser) GetShows2() []models.Show {
-	//https://graphql.tv4play.se/graphql?operationName=ProgramSearch&variables=%7B%22order_by%22%3A%22NAME%22%2C%22per_page%22%3A1000%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%2278cdda0280f7e6b21dea52021406cc44ef0ce37102cb13571804b1a5bd3b9aa1%22%7D%7D
 	data := utils.GetJSON("https://api.tv4play.se/play/programs?is_active=true&platform=tablet&per_page=1000&fl=nid,name,program_image,is_premium,updated_at,channel,description,category_nid&start=0")
 	totalHits := int(data["total_hits"].(float64))
 	var results = data["results"].([]interface{})

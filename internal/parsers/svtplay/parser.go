@@ -35,7 +35,7 @@ func (p Parser) getURL(operation string, hashValue string, variables map[string]
 
 	b, err := json.Marshal(variables)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 
 	vars := utils.Quote(string(b))
@@ -64,7 +64,7 @@ func (p Parser) GetSeasons(show *models.Show) []models.Season {
 	}
 	var listablesBySlugContainer, ok2 = data["listablesBySlug"].([]interface{})
 	if !ok2 {
-		log.Panic("Could not convert result[\"data\"]")
+		log.Println("Could not convert result[\"data\"]")
 		return seasons
 	}
 
@@ -111,12 +111,12 @@ func (p Parser) GetSeasons(show *models.Show) []models.Season {
 						}
 					}
 
-					id := utils.GetStringValue(item, "id", nil)                      //item["id"].(string)
-					name := utils.GetStringValue(item, "name", nil)                  //item["name"].(string)
-					svtID := utils.GetStringValue(item, "svtId", nil)                // item["svtId"].(string)
-					videoSvtID := utils.GetStringValue(item, "videoSvtId", nil)      //item["videoSvtId"].(string)
-					slug := utils.GetStringValue(item, "slug", nil)                  //item["slug"].(string)
-					descrption := utils.GetStringValue(item, "longDescription", nil) //item["longDescription"].(string)
+					id := utils.GetStringValue(item, "id", nil)
+					name := utils.GetStringValue(item, "name", nil)
+					svtID := utils.GetStringValue(item, "svtId", nil)
+					videoSvtID := utils.GetStringValue(item, "videoSvtId", nil)
+					slug := utils.GetStringValue(item, "slug", nil)
+					descrption := utils.GetStringValue(item, "longDescription", nil)
 					dur, ok := item["duration"]
 					var duration float64 = 0
 					if ok {
@@ -156,14 +156,12 @@ func (p Parser) GetSeasons(show *models.Show) []models.Season {
 							ImageURL: &image, URL: &url, Duration: &duration, Number: &number, ShowSlug: show.Slug, UpdatedAt: validFrom,
 							ValidFrom: validFrom, ValidTo: utils.GetTimeFromString(validTo), Variants: variants, PlatformSpecific: platformSpecific})
 				}
-				//season := models.Season{ID: content["id"].(string), Name: content["name"].(string), Episodes: episodes}
+
 				season := models.Season{ID: utils.GetStringValue(content, "id", nil), Name: utils.GetStringValue(content, "name", nil), Episodes: episodes}
 				seasons = append(seasons, season)
 			case "Upcoming":
 			case "Default":
-				/*if len(seasons) == 0 {
-					fmt.Println("No seasons for:", show.Name, show.Slug, typeString)
-				}*/
+
 			default:
 				fmt.Println("No seasons for:", show.Name, show.Slug, typeString)
 			}
@@ -257,7 +255,6 @@ func (p Parser) extractShows(result map[string]interface{}) []models.Show {
 
 // PostCheckShows to remove the ones that should not be visible
 func (p Parser) PostCheckShows(shows []models.Show) []models.Show {
-	//return shows
 	newShows := make([]models.Show, 0, len(shows))
 	showsWithOutEpisodes := make([]models.Show, 0, 0)
 	for _, show := range shows {
@@ -323,108 +320,3 @@ func getDataForSingleEpisode(show *models.Show) []models.Season {
 	}}
 	return seasons
 }
-
-//GetLatest from SVTPlay
-// func (p Parser) GetLatest(shows []models.Show) []models.Episode {
-// 	if len(shows) == 0 {
-// 		return make([]models.Episode, 0, 0)
-// 	}
-
-// 	episodes := make([]models.Episode, 0, 0)
-
-// 	for _, show := range shows {
-// 		if time.Now().AddDate(0, 0, -7).Before(*show.UpdatedAt) {
-// 			for _, season := range show.Seasons {
-// 				for _, episode := range season.Episodes {
-// 					if episode.UpdatedAt == nil {
-// 						log.Println("No updated at for:", show.Name, show.Slug)
-// 					} else if time.Now().AddDate(0, 0, -7).Before(*episode.UpdatedAt) {
-// 						episodes = append(episodes, episode)
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return episodes
-
-// opt := map[string]interface{}{}
-// url := p.getURL("StartPage", "c011159df51539c3604fc09a6ca856af833715d1477d0082afe5a9a871477569", opt)
-
-// result := utils.GetJSONFix(url)
-// var data = result["data"].(map[string]interface{})
-// var start = data["startForSvtPlay"].(map[string]interface{})
-// var selections = start["selections"].([]interface{})
-
-// var episodes []models.Episode
-
-// for z := 0; z < len(selections); z++ {
-// 	selection := selections[z].(map[string]interface{})
-// 	var items = selection["items"].([]interface{})
-
-// 	//Only get Senaste
-// 	if selection["id"] != "latest_start" {
-// 		continue
-// 	}
-
-// 	episodes = make([]models.Episode, 0, len(items))
-
-// 	for _, i := range items {
-// 		obj := i.(map[string]interface{})
-
-// 		item := obj["item"].(map[string]interface{})
-
-// 		id := item["id"].(string)
-// 		name := obj["heading"].(string) + " - " + obj["subHeading"].(string)
-
-// 		description := item["longDescription"].(string)
-
-// 		urls := item["urls"].(map[string]interface{})
-// 		url := ""
-// 		if x, ok := urls["svtplay"]; ok {
-// 			url = "https://www.svtplay.se" + x.(string)
-// 		}
-
-// 		images := obj["images"].(map[string]interface{})
-// 		imageData := images["wide"].(map[string]interface{})
-// 		image := ""
-// 		if x, ok := imageData["id"]; ok {
-// 			image = fmt.Sprintf("https://www.svtstatic.se/image/large/1024/%s", x)
-// 		}
-
-// 		slug := ""
-
-// 		variants := make([]models.Variant, 0, 1)
-// 		if x, ok := item["variants"]; ok {
-// 			for _, v := range x.([]interface{}) {
-// 				variantContainer := v.(map[string]interface{})
-// 				url2 := ""
-// 				if x, ok := variantContainer["urls"]; ok {
-// 					if y, ok2 := x.(map[string]interface{})["svtplay"]; ok2 {
-// 						url2 = "https://www.svtplay.se" + y.(string)
-// 						///video/27266545/australien-runt-med-julia-bradbury/australien-runt-med-julia-bradbury-sasong-1-northern-territory
-// 						s := strings.Split(y.(string), "/")
-// 						if len(s) == 5 {
-// 							showSlug := s[3]
-// 							if len(showSlug) >= len(s[4]) {
-// 								slug = s[4]
-// 							} else {
-// 								slug = s[4][len(showSlug)+1:]
-// 							}
-// 						}
-// 					}
-// 				}
-// 				variants = append(variants, models.Variant{ID: id, PlatformSpecific: nil, URL: url2})
-// 			}
-// 		}
-// 		platformSpecific := models.PlatformSpecific{"svt_id": item["videoSvtId"].(string)}
-
-// 		episodes = append(episodes,
-// 			models.Episode{
-// 				ID: id, Name: name, Slug: slug, LongDescription: description,
-// 				ImageURL: image, URL: url, Duration: nil, Number: "",
-// 				ValidFrom: nil, ValidTo: nil, Variants: variants, PlatformSpecific: platformSpecific})
-
-// 	}
-// }
-// return episodes
-//}

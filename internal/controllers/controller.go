@@ -71,7 +71,7 @@ func (c *Controller) createErrorResponse(ctx *gin.Context, statusCode int, code 
 func marshal(data interface{}, prettyPrint bool, groups ...string) ([]byte, error) {
 	v1, err := version.NewVersion(apiVersion)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
 		return []byte{}, err
 	}
 
