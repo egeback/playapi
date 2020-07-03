@@ -53,6 +53,7 @@ func main() {
 
 	//Add parsers
 	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
+	//parsers.Set([]parsers.ParserInterface{new(tv4play.Parser)})
 
 	//Configure gin
 	r := gin.New()
@@ -63,9 +64,15 @@ func main() {
 	{
 		shows := v1.Group("/shows")
 		{
+			shows.GET("", c.ListShows)
 			shows.GET("/", c.ListShows)
 			shows.GET("/:slug", c.ShowShow)
 			shows.GET("/:slug/seasons", c.ShowShow)
+		}
+		episodes := v1.Group("/episodes")
+		{
+			episodes.GET("", c.ListEpisodes)
+			episodes.GET("/", c.ListEpisodes)
 		}
 		common := v1.Group("/")
 		{
@@ -94,7 +101,9 @@ func updateShows() {
 	shows := make([]models.Show, 0)
 	for _, parser := range parsers.All("") {
 		s := parser.GetShowsWithSeasons()
-		shows = append(shows, parser.PostCheckShows(s)...)
+		checkedShows := parser.PostCheckShows(s)
+		shows = append(shows, checkedShows...)
+		models.AddLatestEpisodes(parsers.GetLatest(parser, checkedShows), parser.Name())
 	}
 
 	showsWithSeasons := 0
@@ -103,7 +112,7 @@ func updateShows() {
 
 	//Gather statistics
 	for _, show := range shows {
-		if show.Name == "" {
+		if show.Name == nil {
 			fmt.Println(show)
 		}
 		if len(show.Seasons) == 0 {
@@ -118,7 +127,7 @@ func updateShows() {
 
 	//Sort slice
 	sort.SliceStable(shows, func(i, j int) bool {
-		return shows[i].Slug < shows[j].Slug
+		return *shows[i].Slug < *shows[j].Slug
 	})
 	models.ShowsSet(shows)
 

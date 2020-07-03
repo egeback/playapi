@@ -2,24 +2,26 @@ package models
 
 import (
 	"strings"
+	"time"
 
 	"github.com/egeback/playapi/internal/utils"
 )
 
 // Show handles show information
 type Show struct {
-	ID          string   `json:"-" groups:"api" example:"1"`
-	Name        string   `json:"name" groups:"api" example:"Show Name"`
-	Slug        string   `json:"slug" groups:"api" example:"show_name"`
-	APIURL      string   `json:"api_url" groups:"api" example:"http://adad.ad/se"`
-	PageURL     string   `json:"page_url" groups:"api" example:"http://adad.ad/se"`
-	Seasons     []Season `json:"seasons" groups:"seasons"`
-	ImageURL    string   `json:"imageUrl" groups:"api" example:"http://adad.ad/se"`
-	Description string   `json:"decription" groups:"api" example:"Show about x"`
-	UpdatedAt   string   `json:"updatedAt" groups:"api" example:"2019-12-22"`
-	Genre       string   `json:"genre" groups:"api" example:"2019-12-22"`
-	Prossesed   bool     `json:"-"`
-	Provider    string   `json:"service" groups:"api"`
+	ID               string            `json:"-" groups:"api" example:"1"`
+	Name             *string           `json:"name" groups:"api" example:"Show Name"`
+	Slug             *string           `json:"slug" groups:"api" example:"show_name"`
+	APIURL           *string           `json:"api_url" groups:"api" example:"http://adad.ad/se"`
+	PageURL          *string           `json:"page_url" groups:"api" example:"http://adad.ad/se"`
+	Seasons          []Season          `json:"seasons" groups:"seasons"`
+	ImageURL         *string           `json:"imageUrl" groups:"api" example:"http://adad.ad/se"`
+	Description      *string           `json:"decription" groups:"api" example:"Show about x"`
+	UpdatedAt        *time.Time        `json:"updatedAt" groups:"api" example:"2019-12-22"`
+	Genre            *string           `json:"genre" groups:"api" example:"2019-12-22"`
+	Prossesed        bool              `json:"-"`
+	Provider         string            `json:"service" groups:"api"`
+	PlatformSpecific *PlatformSpecific `json:"platform_specific" groups:"api"`
 }
 
 var shows = make([]Show, 0)
@@ -40,17 +42,17 @@ func ShowsAll(queryItems ...QueryItem) ([]Show, error) {
 		match := true
 		for _, q := range queryItems {
 			if strings.ToLower(q.Field) == "slug" {
-				if exclude(q, s.Slug) {
+				if exclude(q, *s.Slug) {
 					match = false
 					break
 				}
 			} else if strings.ToLower(q.Field) == "genre" {
-				if exclude(q, s.Genre) {
+				if exclude(q, *s.Genre) {
 					match = false
 					break
 				}
 			} else if strings.ToLower(q.Field) == "name" {
-				if exclude(q, s.Name) {
+				if exclude(q, *s.Name) {
 					match = false
 					break
 				}
@@ -66,6 +68,11 @@ func ShowsAll(queryItems ...QueryItem) ([]Show, error) {
 		}
 	}
 	return as, nil
+}
+
+//AddShow show to array
+func AddShow(show Show) {
+	shows = append(shows, show)
 }
 
 // Function to determine an item should be excluded based on query item and value
@@ -91,12 +98,12 @@ func ShowsSet(s []Show) {
 	g := make(map[string][]*Show, 0)
 	v := make(map[string][]*Show, 0)
 	for _, show := range shows {
-		_, exists := g[show.Genre]
+		_, exists := g[*show.Genre]
 		if !exists {
 			s := make([]*Show, 0, 0)
-			g[show.Genre] = s
+			g[*show.Genre] = s
 		}
-		s := g[show.Genre]
+		s := g[*show.Genre]
 		s = append(s, &show)
 
 		_, exists = v[show.Provider]
@@ -104,7 +111,7 @@ func ShowsSet(s []Show) {
 			s := make([]*Show, 0, 0)
 			v[show.Provider] = s
 		}
-		s = g[show.Genre]
+		s = g[*show.Genre]
 		s = append(s, &show)
 	}
 }

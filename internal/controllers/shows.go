@@ -69,7 +69,7 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 
 	//Create paged response struct
 	response := PagedResponse{
-		Limit:   *limit,
+		Limit:   utils.Min(*limit, size),
 		Size:    size,
 		Start:   *offset,
 		Results: shows,
@@ -83,9 +83,16 @@ func (c *Controller) ListShows(ctx *gin.Context) {
 		}
 	} else {
 		if *prettyPrint {
-			c.createJSONResponsePretty(ctx, response, "seasons")
+			j, err := json.MarshalIndent(response, "", "  ")
+			if err != nil {
+				c.createErrorResponse(ctx, 500, 100, "Could not marshal response")
+				return
+			}
+			ctx.Data(200, "application/json", j)
 		} else {
-			c.createJSONResponse(ctx, response, "seasons")
+			//c.createJSONResponse(ctx, response, "seasons")
+			ctx.JSON(200, response)
+			return
 		}
 	}
 }
@@ -122,10 +129,16 @@ func (c *Controller) ShowShow(ctx *gin.Context) {
 	show = &shows[0]
 
 	if strings.ToLower(prettyPrint) == "false" {
-		c.createJSONResponse(ctx, show, "seasons")
+		j, err := json.MarshalIndent(show, "", "  ")
+		if err != nil {
+			c.createErrorResponse(ctx, 500, 100, "Could not marshal response")
+			return
+		}
+		ctx.Data(200, "application/json", j)
 		return
 	}
-	c.createJSONResponsePretty(ctx, show, "seasons")
+	//c.createJSONResponse(ctx, response, "seasons")
+	ctx.JSON(200, show)
 	return
 }
 

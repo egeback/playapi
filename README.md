@@ -55,8 +55,16 @@ Swagger documenation available at [http://localhost:8080/api/swagger/index.html]
 ## TODO
 
 * [x] Paging support
-* [ ] Newly added item
+* [x] Convert date strings to time objects
+* [ ] Search in show name
+* [ ] Search in episode name
+* [*] Newly added items
+  * [*] Tv4Play
+  * [*] SvtPlay
+* [x] Fix Tv4 collects from both api and graphsq
 * [ ] Additional services
+  * [ ] Tv3 (Sverige)
+  * [ ] Dplay
 * [ ] Test cases
 * [x] Fix swag from docker
 * [x] Update README.md with documentation

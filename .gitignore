@@ -21,3 +21,4 @@ playapi
 !cmd/playapi
 playapi.code-workspace
 cmd/playapi/__debug_bin
+cmd/playapi/__debug_bin 2
