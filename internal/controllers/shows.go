@@ -155,6 +155,28 @@ func extractQueryParameter(str string) ([]models.QueryItem, error) {
 		return nil, err
 	}
 
+	i := 0 // output index
+	for _, x := range queryItems {
+		if queryParmeterisValid(&x) {
+			// copy and increment index
+			queryItems[i] = x
+			i++
+		}
+	}
+	queryItems = queryItems[:i]
+
 	return queryItems, nil
 
+}
+
+func queryParmeterisValid(queryItem *models.QueryItem) bool {
+	if queryItem.Field == "" {
+		return false
+	}
+	if queryItem.Operator == "" {
+		queryItem.Operator = "is"
+	} else if !utils.Contains([]string{"is", "in"}, queryItem.Operator) {
+		return false
+	}
+	return true
 }

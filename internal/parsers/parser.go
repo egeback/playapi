@@ -115,7 +115,3 @@ func checkEpisodes(show models.Show, episodes []models.Episode) []models.Episode
 	}
 	return episodes
 }
-
-//ParserBase base struct for Parser
-type ParserBase struct {
-}

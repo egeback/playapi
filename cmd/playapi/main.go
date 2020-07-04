@@ -11,8 +11,7 @@ import (
 	_ "github.com/egeback/playapi/internal/docs"
 	"github.com/egeback/playapi/internal/models"
 	"github.com/egeback/playapi/internal/parsers"
-	"github.com/egeback/playapi/internal/parsers/svtplay"
-	"github.com/egeback/playapi/internal/parsers/tv4play"
+	"github.com/egeback/playapi/internal/parsers/dplay"
 	"github.com/egeback/playapi/internal/version"
 	"github.com/gin-gonic/gin"
 	"github.com/jasonlvhit/gocron"
@@ -52,8 +51,8 @@ func main() {
 	log.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
 
 	//Add parsers
-	parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
-	//parsers.Set([]parsers.ParserInterface{new(tv4play.Parser)})
+	//parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
+	parsers.Set([]parsers.ParserInterface{dplay.CreateParser()})
 
 	//Configure gin
 	r := gin.New()
@@ -72,7 +71,7 @@ func main() {
 		episodes := v1.Group("/episodes")
 		{
 			episodes.GET("", c.ListEpisodes)
-			episodes.GET("/", c.ListEpisodes)
+			episodes.GET("/latest", c.ListLatestEpisodes)
 		}
 		common := v1.Group("/")
 		{
@@ -110,8 +109,12 @@ func updateShows() {
 	showsWithNoSeasons := 0
 	notProcessed := 0
 
-	//Gather statistics
+	//Gather statistics and add episodes
+	episodes := make([]models.Episode, 0, 0)
 	for _, show := range shows {
+		for _, season := range show.Seasons {
+			episodes = append(episodes, season.Episodes...)
+		}
 		if show.Name == nil {
 			fmt.Println(show)
 		}
@@ -124,8 +127,17 @@ func updateShows() {
 			notProcessed++
 		}
 	}
+	//Sort episodes slice
+	sort.SliceStable(episodes, func(i, j int) bool {
+		if episodes[i].Slug != nil && episodes[j].Slug != nil {
+			return *episodes[i].Slug < *episodes[j].Slug
+		}
+		return *episodes[i].Name < *episodes[j].Name
+	})
 
-	//Sort slice
+	models.AddEpisodes(episodes)
+
+	//Sort shows slice
 	sort.SliceStable(shows, func(i, j int) bool {
 		return *shows[i].Slug < *shows[j].Slug
 	})

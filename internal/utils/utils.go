@@ -37,23 +37,27 @@ func Min(x, y int) int {
 }
 
 // GetJSON downloads contents of url and returns json representation by unmarshal result
-func GetJSON(url string) map[string]interface{} {
-	return GetJSONUserAgent(url, nil)
+func GetJSON(url string, cookies ...*http.Cookie) map[string]interface{} {
+	return GetJSONUserAgent(url, nil, cookies...)
 }
 
 // GetJSONFix downloads contents of url and returns json representation by unmarshal result
-func GetJSONFix(url string) map[string]interface{} {
+func GetJSONFix(url string, cookies ...*http.Cookie) map[string]interface{} {
 	userAgent := "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0"
-	return GetJSONUserAgent(url, &userAgent)
+	return GetJSONUserAgent(url, &userAgent, cookies...)
 }
 
 // GetJSONUserAgent downloads contents of url and returns json representation by unmarshal result
-func GetJSONUserAgent(url string, userAgent *string) map[string]interface{} {
+func GetJSONUserAgent(url string, userAgent *string, cookies ...*http.Cookie) map[string]interface{} {
 	req, err := http.NewRequest("GET", url, nil)
 
 	//Fix for SvtPlay
 	if userAgent != nil {
 		req.Header.Set("User-Agent", *userAgent)
+	}
+
+	for _, cookie := range cookies {
+		req.AddCookie(cookie)
 	}
 
 	client := &http.Client{}
@@ -203,7 +207,8 @@ func GetMapValue(data map[string]interface{}, param string) *map[string]interfac
 		value := data[param].(map[string]interface{})
 		return &value
 	}
-	return nil
+	empty := make(map[string]interface{})
+	return &empty
 }
 
 //Contains checks if string array contains string

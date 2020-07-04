@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strings"
 	"time"
 
 	"github.com/egeback/playapi/internal/utils"
@@ -28,6 +29,7 @@ type Episode struct {
 type PlatformSpecific map[string]interface{}
 
 var latestEpisodes = make(map[string][]Episode)
+var allEpisodes = make([]Episode, 0)
 
 //GetLatestEpisodes returns latest shows from the stream services
 func GetLatestEpisodes(services ...string) ([]Episode, error) {
@@ -61,4 +63,52 @@ func AddLatestEpisodes(episodes []Episode, service string) {
 //RemoveServiceFromLatestEpisodes remove from map
 func RemoveServiceFromLatestEpisodes(service string) {
 	delete(latestEpisodes, service)
+}
+
+//GetEpisodes returns latest shows from the stream services
+func GetEpisodes(queryItems ...QueryItem) ([]Episode, error) {
+	if len(queryItems) == 0 {
+		return allEpisodes, nil
+	}
+	as := make([]Episode, 0, 0)
+	for k, s := range shows {
+		match := true
+		for _, q := range queryItems {
+			if strings.ToLower(q.Field) == "slug" {
+				if exclude(q, *s.Slug, q.Operator) {
+					match = false
+					break
+				}
+			} else if strings.ToLower(q.Field) == "genre" {
+				if exclude(q, *s.Genre, q.Operator) {
+					match = false
+					break
+				}
+			} else if strings.ToLower(q.Field) == "name" {
+				if exclude(q, *s.Name, q.Operator) {
+					match = false
+					break
+				}
+			} else if strings.ToLower(q.Field) == "provider" || strings.ToLower(q.Field) == "service" {
+				if exclude(q, s.Provider, q.Operator) {
+					match = false
+					break
+				}
+			}
+		}
+		if match {
+			as = append(as, allEpisodes[k])
+		}
+	}
+	return as, nil
+}
+
+//ClearEpisodes clear latest episodes
+func ClearEpisodes() {
+	allEpisodes = make([]Episode, 0, 0)
+}
+
+//AddEpisodes add episodes
+func AddEpisodes(episodes []Episode) {
+	allEpisodes = append(allEpisodes, episodes...)
 }

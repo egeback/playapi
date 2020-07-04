@@ -14,7 +14,11 @@ import (
 // Parser struct
 type Parser struct {
 	parsers.ParserInterface
-	parsers.ParserBase
+}
+
+//CreateParser returns new tv4play parser
+func CreateParser() parsers.ParserInterface {
+	return Parser{}
 }
 
 // Name return name of parser

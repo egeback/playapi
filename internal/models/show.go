@@ -9,7 +9,7 @@ import (
 
 // Show handles show information
 type Show struct {
-	ID               string            `json:"-" groups:"api" example:"1"`
+	ID               string            `json:"id" groups:"api" example:"1"`
 	Name             *string           `json:"name" groups:"api" example:"Show Name"`
 	Slug             *string           `json:"slug" groups:"api" example:"show_name"`
 	APIURL           *string           `json:"api_url" groups:"api" example:"http://adad.ad/se"`
@@ -28,8 +28,9 @@ var shows = make([]Show, 0)
 
 //QueryItem struct with field and value data
 type QueryItem struct {
-	Field string      `json:"field"`
-	Value interface{} `json:"value"`
+	Field    string      `json:"field"`
+	Value    interface{} `json:"value"`
+	Operator string      `json:"operator"`
 }
 
 //ShowsAll return shows with query, filters on slug, genre, name, provider/service
@@ -42,22 +43,22 @@ func ShowsAll(queryItems ...QueryItem) ([]Show, error) {
 		match := true
 		for _, q := range queryItems {
 			if strings.ToLower(q.Field) == "slug" {
-				if exclude(q, *s.Slug) {
+				if exclude(q, *s.Slug, q.Operator) {
 					match = false
 					break
 				}
 			} else if strings.ToLower(q.Field) == "genre" {
-				if exclude(q, *s.Genre) {
+				if exclude(q, *s.Genre, q.Operator) {
 					match = false
 					break
 				}
 			} else if strings.ToLower(q.Field) == "name" {
-				if exclude(q, *s.Name) {
+				if exclude(q, *s.Name, q.Operator) {
 					match = false
 					break
 				}
 			} else if strings.ToLower(q.Field) == "provider" || strings.ToLower(q.Field) == "service" {
-				if exclude(q, s.Provider) {
+				if exclude(q, s.Provider, q.Operator) {
 					match = false
 					break
 				}
@@ -75,16 +76,23 @@ func AddShow(show Show) {
 	shows = append(shows, show)
 }
 
-// Function to determine an item should be excluded based on query item and value
-func exclude(q QueryItem, value string) bool {
+// Exclude Function to determine an item should be excluded based on query item and value
+func exclude(q QueryItem, value string, operator string) bool {
 	switch q.Value.(type) {
 	case []interface{}:
 		if !utils.Contains(utils.ExtractStringSlice(q.Value.([]interface{})), value) {
 			return true
 		}
 	case interface{}:
-		if q.Value.(string) != value {
-			return true
+		if q.Operator == "is" || q.Operator == "" {
+			if q.Value.(string) != value {
+				return true
+			}
+		} else if q.Operator == "in" {
+			// This is case sensitive
+			if !strings.Contains(value, q.Value.(string)) {
+				return true
+			}
 		}
 	default:
 		return true

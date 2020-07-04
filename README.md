@@ -56,15 +56,22 @@ Swagger documenation available at [http://localhost:8080/api/swagger/index.html]
 
 * [x] Paging support
 * [x] Convert date strings to time objects
-* [ ] Search in show name
-* [ ] Search in episode name
-* [*] Newly added items
-  * [*] Tv4Play
-  * [*] SvtPlay
+* [x] Search in show name
+* [x] Search in all episode name
+* [x] Get all episodes
+* [ ] Reduced docker size [https://www.callicoder.com/docker-golang-image-container-example/](https://www.callicoder.com/docker-golang-image-container-example/)
+* [ ] Genre should be a list
+  * [ ] Update SvtPlay
+  * [ ] Update Tv4Play
+  * [ ] Update Dplay
+* [x] Newly added items
+  * [x] Tv4Play
+  * [x] SvtPlay
+  * [x] Dplay
 * [x] Fix Tv4 collects from both api and graphsq
 * [ ] Additional services
-  * [ ] Tv3 (Sverige)
-  * [ ] Dplay
+  * [ ] Viafree
+  * [x] Dplay
 * [ ] Test cases
 * [x] Fix swag from docker
 * [x] Update README.md with documentation

@@ -14,7 +14,11 @@ import (
 // Parser stuct
 type Parser struct {
 	parsers.ParserInterface
-	parsers.ParserBase
+}
+
+//CreateParser returns new tv4play parser
+func CreateParser() parsers.ParserInterface {
+	return Parser{}
 }
 
 // Name return name of parser
@@ -68,7 +72,7 @@ func extractShow(data map[string]interface{}) models.Show {
 	}
 }
 
-func (p Parser) getSeasonsBackup(show *models.Show) []models.Season {
+func (p Parser) getSeasonsBackup(show *models.Show, retry ...bool) []models.Season {
 	extensions := fmt.Sprintf(`{"persistedQuery": {"version": 1, "sha256Hash": "%s"}}`, "906eba9587ac10bd55ebb063b549b513bb690bc26dd373d95797efc57bedba67")
 	extensions = utils.Quote(extensions)
 	vars := utils.Quote(fmt.Sprintf("{\"nid\":\"%s\"}", *show.Slug))
@@ -79,6 +83,13 @@ func (p Parser) getSeasonsBackup(show *models.Show) []models.Season {
 
 	response := utils.GetJSON(apiURL)
 	data := utils.GetMapValue(response, "data")
+	if data == nil {
+		if len(retry) == 0 {
+			return p.getSeasonsBackup(show, true)
+		}
+		log.Println("Data in response is nil")
+		return make([]models.Season, 0)
+	}
 	if (*data)["program"] == nil {
 		return make([]models.Season, 0)
 	}
