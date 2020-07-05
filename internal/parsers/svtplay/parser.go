@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/egeback/playapi/internal/models"
@@ -205,10 +206,11 @@ func (p Parser) extractShows(result map[string]interface{}) []models.Show {
 			for _, i := range items {
 				item := (i.(map[string]interface{}))["item"].(map[string]interface{})
 				if item["__typename"] == "Episode" || item["__typename"] == "Clip" || item["__typename"] == "Trailer" {
-					if parent := utils.GetMapValue(item, "parent"); parent != nil {
+					if parent := utils.GetMapValue(item, "parent"); parent != nil && len(*parent) > 0 {
 						if *utils.GetStringValue(item, "__typename", nil) != "Episode" {
 							fmt.Println(*utils.GetStringValue(item, "name", nil), *utils.GetStringValue(item, "slug", nil))
-							fmt.Println("	", *utils.GetStringValue(*parent, "name", nil), *utils.GetStringValue(item, "__typename", nil) != "Episode")
+							fmt.Println("	", *utils.GetStringValue(*parent, "name", nil))
+							fmt.Println(*utils.GetStringValue(item, "__typename", nil))
 						}
 					} else if item["__typename"] != "Clip" && item["__typename"] != "Trailer" {
 						fmt.Println("No parent:", *utils.GetStringValue(item, "name", nil), *utils.GetStringValue(item, "slug", nil))
@@ -291,10 +293,16 @@ func getDataForSingleEpisode(show *models.Show) []models.Season {
 		if svtID, ok := platformSpecfic["svtId"]; ok {
 			url := "https://api.svt.se/video/" + string(*svtID.(*string))
 			respons := utils.GetJSONFix(url)
+			//Since this can only be used for non shows check response
+			if msg, ok := respons["msg"]; ok {
+				if strings.HasPrefix(msg.(string), "Only SvtId for an episode version") {
+					return make([]models.Season, 0)
+				}
+			}
 
 			duration = utils.GetFloat64Value(respons, "contentDuration", nil)
 			if rights := utils.GetMapValue(respons, "rights"); rights != nil {
-				updatedAtString := utils.GetStringValue(*rights, "validFrom", nil)
+				updatedAtString := utils.GetStringValue(*rights, "validFrom", &parsers.EmptyString)
 				updatedAt = utils.GetTimeFromString(*updatedAtString)
 			}
 

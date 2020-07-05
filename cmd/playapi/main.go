@@ -12,6 +12,8 @@ import (
 	"github.com/egeback/playapi/internal/models"
 	"github.com/egeback/playapi/internal/parsers"
 	"github.com/egeback/playapi/internal/parsers/dplay"
+	"github.com/egeback/playapi/internal/parsers/svtplay"
+	"github.com/egeback/playapi/internal/parsers/tv4play"
 	"github.com/egeback/playapi/internal/version"
 	"github.com/gin-gonic/gin"
 	"github.com/jasonlvhit/gocron"
@@ -51,8 +53,8 @@ func main() {
 	log.Printf("Running Play Media API version: %s (%s)\n", version.BuildVersion, version.BuildTime)
 
 	//Add parsers
-	//parsers.Set([]parsers.ParserInterface{new(svtplay.Parser), new(tv4play.Parser)})
-	parsers.Set([]parsers.ParserInterface{dplay.CreateParser()})
+	parsers.Set([]parsers.ParserInterface{dplay.CreateParser(), new(svtplay.Parser), new(tv4play.Parser)})
+	//parsers.Set([]parsers.ParserInterface{svtplay.CreateParser()})
 
 	//Configure gin
 	r := gin.New()

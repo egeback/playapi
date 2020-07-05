@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -47,12 +48,44 @@ func getKey() (string, time.Time, []*http.Cookie) {
 
 	client := http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Set("Accept-Language", "sv-SE,sv;q=0.8,en-US;q=0.5,en;q=0.3")
+	req.Header.Set("Cache-Control", "max-age=0")
+	req.Header.Set("Connection", "keep-alive")
+	req.Header.Set("TE", "Trailers")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
+
 	resp, err := client.Do(req) //send request
 	if err != nil {
 		log.Println(err)
 		log.Println("Could not get cookies")
 	}
+
 	cookies := resp.Cookies()
+	// output := "# Netscape HTTP Cookie File\n"
+	// for _, cookie := range cookies {
+	// 	expires, err := time.Parse("Tue, 2 Jul 2006 15:04:05 GMT", cookie.RawExpires)
+	// 	timestamp := "1909253725"
+	// 	if err == nil {
+	// 		timestamp = strconv.FormatInt(expires.Unix(), 10)
+	// 	}
+	// 	fmt.Println(cookie.Value)
+	// 	//
+	// 	output = output + fmt.Sprintf("\n%s\t%s\t%s\t%s\t%s\t%s\t%s", "disco-api.dplay.se", "FALSE", cookie.Path, "TRUE", timestamp, cookie.Name, cookie.Value)
+	// 	//disco-api.dplay.se	FALSE	/	TRUE	1909251346	st	eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVU0VSSUQ6ZHBsYXlzZTo3Mjg5N2Q2ZC0xYWU2LTQyY2ItYjdmYy1jMTVmNjVhNTIyMTkiLCJqdGkiOiJ0b2tlbi0yYmI4NzhlMi05MWIxLTRjOTMtYTBmOS0xNTM4MDhhOTViZGEiLCJhbm9ueW1vdXMiOmZhbHNlLCJpYXQiOjE1OTM4Njc0Nzl9.PM5_vVtpeagtf4iBuqwxRKPAzRTMyjq47mzjzG8CbNY
+	// }
+
+	// defer resp.Body.Close()
+
+	// bytes, err := ioutil.ReadAll(resp.Body)
+	// resp.Body.Close()
+	// fmt.Println(string(bytes))
+	// fmt.Println(url)
+
+	// ioutil.WriteFile("cookies.txt", []byte(output), 0644)
+
 	return uuid, uuidTime, cookies
 }
 
@@ -69,7 +102,7 @@ func (p Parser) getData(url string) map[string]interface{} {
 // GetSeasons for given show
 func (p Parser) GetSeasons(show *models.Show) []models.Season {
 	page := 1
-	parametersBase := "decorators=viewingHistory&include=images,primaryChannel,show&filter[videoType]=EPISODE,LIVE,FOLLOW_UP,STANDALONE&filter[show.id]=%s&page[size]=100&page[number]=%d&sort=-seasonNumber,-episodeNumber,videoType,earliestPlayableStart"
+	parametersBase := "decorators=viewingHistory&include=images,primaryChannel,show,season&filter[videoType]=EPISODE,LIVE,FOLLOW_UP,STANDALONE&filter[show.id]=%s&page[size]=100&page[number]=%d&sort=-seasonNumber,-episodeNumber,videoType,earliestPlayableStart"
 	parameters := utils.Quote(fmt.Sprintf(parametersBase, show.ID, page))
 	url := fmt.Sprintf("https://disco-api.dplay.se/content/videos?%s", parameters)
 
@@ -176,6 +209,15 @@ func getImagesRoutesGenres(response map[string]interface{}) Included {
 			channel["description"] = *utils.GetStringValue(*attributes, "description", &parsers.EmptyString)
 			channel["id"] = id
 			incl.Channels[id] = channel
+		} else if t == "season" {
+			season := make(map[string]interface{})
+
+			season["episodeCount"] = utils.GetIntValue(*attributes, "episodeCount", 0)
+			season["plannedEpisodeCount"] = utils.GetIntValue(*attributes, "plannedEpisodeCount", 0)
+			season["seasonNumber"] = utils.GetIntValue(*attributes, "seasonNumber", 0)
+			season["videoCount"] = utils.GetIntValue(*attributes, "videoCount", 0)
+			season["id"] = id
+			incl.Seasons[id] = season
 		}
 	}
 	return incl
@@ -279,16 +321,34 @@ func extractSeasons(response map[string]interface{}, show *models.Show, included
 
 		attributes := utils.GetMapValue(data, "attributes")
 		relationships := utils.GetMapValue(data, "relationships")
-
 		id := utils.GetStringValue(data, "id", &parsers.EmptyString)
+
+		publishStartString := utils.GetStringValue(*attributes, "publishStart", &parsers.EmptyString)
+		publishStart := utils.GetTimeFromString(*publishStartString)
+
+		validFrom := publishStart
+		var validTo *time.Time = nil
+
+		if availabilityWindows, exists := (*attributes)["availabilityWindows"]; exists {
+			registered := false
+			for _, aW := range availabilityWindows.([]interface{}) {
+				availabilityWindow := aW.(map[string]interface{})
+				validFrom = utils.GetTimeFromString(availabilityWindow["playableStart"].(string))
+				validTo = utils.GetTimeFromString(availabilityWindow["playableStart"].(string))
+				if availabilityWindow["package"] == "Registered" {
+					registered = true
+				}
+			}
+			if !registered {
+				//continue
+			}
+		}
+
 		slug := utils.GetStringValue(*attributes, "alternateId", &parsers.EmptyString)
 		description := utils.GetStringValue(*attributes, "description", &parsers.EmptyString)
 		name := utils.GetStringValue(*attributes, "name", &parsers.EmptyString)
 		duration := utils.GetFloat64Value(*attributes, "videoDuration", &float0)
 		path := utils.GetStringValue(*attributes, "path", &parsers.EmptyString)
-
-		publishStartString := utils.GetStringValue(*attributes, "publishStart", &parsers.EmptyString)
-		publishStart := utils.GetTimeFromString(*publishStartString)
 
 		airDateString := utils.GetStringValue(*attributes, "airDate", &parsers.EmptyString)
 		var airDate *time.Time
@@ -301,23 +361,24 @@ func extractSeasons(response map[string]interface{}, show *models.Show, included
 		seasonNumber := utils.GetIntValue(*attributes, "seasonNumber", 0)
 		episodeNumber := utils.GetIntValue(*attributes, "episodeNumber", 0)
 
-		seasonData := make(map[string]interface{}, 0)
+		var seasonData *map[string]interface{} = nil
 		if value, ok := (*utils.GetMapValue(*relationships, "season"))["data"]; ok {
-			seasonData = value.(map[string]interface{})
+			s := value.(map[string]interface{})
+			seasonData = &s
 		}
 
-		if _, ok := included.Seasons[string(seasonNumber)]; !ok {
-			id := "0"
-			if seasonData["id"] != nil {
-				id = seasonData["id"].(string)
-			}
-			name := string(seasonNumber)
-			seasons[seasonNumber] = models.Season{
-				ID:       &id,
-				Name:     &name,
-				Episodes: make([]models.Episode, 0, 0),
-			}
-		}
+		// if _, ok := included.Seasons[string(seasonNumber)]; !ok {
+		// 	id := "0"
+		// 	if seasonData["id"] != nil {
+		// 		id = seasonData["id"].(string)
+		// 	}
+		// 	name := strconv.FormatInt(int64(seasonNumber), 10)
+		// 	seasons[seasonNumber] = models.Season{
+		// 		ID:       &id,
+		// 		Name:     &name,
+		// 		Episodes: make([]models.Episode, 0, 0),
+		// 	}
+		// }
 
 		url := fmt.Sprintf("https://www.dplay.se/videos%s", *path)
 		routeData := make(map[string]interface{})
@@ -358,7 +419,8 @@ func extractSeasons(response map[string]interface{}, show *models.Show, included
 			ID:              id,
 			Name:            name,
 			LongDescription: description,
-			ValidFrom:       publishStart,
+			ValidFrom:       validFrom,
+			ValidTo:         validTo,
 			Duration:        duration,
 			ImageURL:        &imageURL,
 			Number:          &episodeNumberString,
@@ -366,8 +428,30 @@ func extractSeasons(response map[string]interface{}, show *models.Show, included
 			URL:             &url,
 			UpdatedAt:       airDate,
 		}
-		episodes := seasons[seasonNumber].Episodes
-		episodes = append(episodes, episode)
+		if season, ok := seasons[seasonNumber]; ok {
+			episodes := seasons[seasonNumber].Episodes
+			season.Episodes = append(episodes, episode)
+			seasons[seasonNumber] = season
+		} else {
+			id := "0"
+			videoCount := 0
+			if seasonData != nil && (*seasonData)["id"] != nil {
+				id = (*seasonData)["id"].(string)
+
+				if s, ok := included.Seasons[id]; ok {
+					videoCount = s["videoCount"].(int)
+				}
+			}
+
+			name := strconv.FormatInt(int64(seasonNumber), 10)
+			episodes := make([]models.Episode, 0, videoCount)
+			seasons[seasonNumber] = models.Season{
+				ID:       &id,
+				Name:     &name,
+				Episodes: episodes,
+			}
+		}
+
 	}
 	values := make([]models.Season, 0, len(seasons))
 
@@ -391,5 +475,10 @@ func (p Parser) Name() string {
 
 // PostCheckShows to remove the ones that should not be visible
 func (p Parser) PostCheckShows(shows []models.Show) []models.Show {
+	// for _, show := range shows {
+	// 	if len(show.Seasons) > 0 {
+	// 		fmt.Println(*show.Slug, *show.Name)
+	// 	}
+	// }
 	return shows
 }

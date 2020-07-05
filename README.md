@@ -72,6 +72,7 @@ Swagger documenation available at [http://localhost:8080/api/swagger/index.html]
 * [ ] Additional services
   * [ ] Viafree
   * [x] Dplay
+* [ ] Add config to configure if premium should be included for dplay
 * [ ] Test cases
 * [x] Fix swag from docker
 * [x] Update README.md with documentation
